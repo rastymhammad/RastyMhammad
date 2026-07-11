@@ -26,6 +26,7 @@
             align-items: center;
             min-height: 100vh;
             padding: 15px;
+            padding-bottom: 90px; /* بۆ ئەوەی ڕێنماییەکە نەچێتە سەر بەشەکانی خوارەوە */
         }
         .container {
             background: white;
@@ -225,6 +226,51 @@
             padding: 10px;
             border-radius: 8px;
         }
+
+        /* ستایلی بۆکسی زیرەک بۆ هاندانی دابەزاندن */
+        .pwa-prompt {
+            display: none;
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 420px;
+            background: #1a365d;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            z-index: 9999;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            animation: slideUp 0.4s ease-out;
+        }
+        .pwa-prompt text { flex-grow: 1; line-height: 1.4; }
+        .pwa-btn {
+            background: #ecc94b;
+            color: #1a365d;
+            border: none;
+            padding: 8px 12px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+        .pwa-close {
+            color: #a0aec0;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+        @keyframes slideUp {
+            from { bottom: -100px; opacity: 0; }
+            to { bottom: 15px; opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -284,6 +330,17 @@
     </div>
 </div>
 
+<div id="ios-prompt" class="pwa-prompt">
+    <button class="pwa-close" onclick="this.parentElement.style.display='none'">×</button>
+    <span style="line-height:1.5; text-align:right;">📲 بۆ ئەوەی بێتە سەر شاشەی مۆبایلەکەت: کلیک لەسەر نیشانەی <b>Share <span style="font-size:16px;">⎋</span></b> بکە لە خوارەوە و پاشان <b>Add to Home Screen</b> هەڵبژێره.</span>
+</div>
+
+<div id="android-prompt" class="pwa-prompt">
+    <button class="pwa-close" onclick="this.parentElement.style.display='none'">×</button>
+    <span style="text-align:right; flex-grow:1;">📥 غەرامەی مۆڵەت وەک ئەپ دابەزێنە:</span>
+    <button class="pwa-btn" id="btnAndroidInstall">دابەزاندن</button>
+</div>
+
 <div class="modal-overlay" id="picker-modal" onclick="closeModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h3 id="modal-title">دیاریکردنی ژمارە</h3>
@@ -310,6 +367,40 @@
     }
 
     calculate();
+
+    // ناسینەوەی جۆری مۆبایل و دەرخستنی بۆکسی ڕێنمایی
+    document.addEventListener("DOMContentLoaded", function() {
+        const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+        if (!isStandalone) {
+            if (isIos) {
+                // ئەگەر ئایفۆن بێت دوای ٣ چرکە ڕێنماییەکە دێتە سەر شاشە
+                setTimeout(() => {
+                    document.getElementById('ios-prompt').style.display = 'flex';
+                }, 3000);
+            }
+        }
+    });
+
+    // بەشی ئەندرۆید بۆ دابەزاندنی ڕاستەوخۆ
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('android-prompt').style.display = 'flex';
+    });
+
+    document.getElementById('btnAndroidInstall').addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                document.getElementById('android-prompt').style.display = 'none';
+            }
+            deferredPrompt = null;
+        }
+    });
 
     function openModal(type) {
         const modal = document.getElementById('picker-modal');
@@ -372,10 +463,10 @@
         const expiryDate = new Date(inputYear, selectedMonth - 1, selectedDay);
         const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         
-        const date2019 = new Date(2019, 11, 3);          // 3.12.2019
-        const date2022_Start = new Date(2022, 6, 6);     // 6.7.2022
-        const date2022_M3_Start = new Date(2022, 6, 7);  // 7.7.2022
-        const date2022_M3_End = new Date(2022, 6, 17);   // 17.7.2022
+        const date2019 = new Date(2019, 11, 3);          
+        const date2022_Start = new Date(2022, 6, 6);     
+        const date2022_M3_Start = new Date(2022, 6, 7);  
+        const date2022_M3_End = new Date(2022, 6, 17);   
 
         let totalMonths = 0;
         let displayMonths = 0;
