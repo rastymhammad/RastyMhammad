@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ئەژمارکردنی غه‌رامه‌ی مۆڵەتی شۆفێری</title>
+    <title>Traffic Halabja</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -26,7 +26,7 @@
             align-items: center;
             min-height: 100vh;
             padding: 15px;
-            padding-bottom: 90px; /* بۆ ئەوەی ڕێنماییەکە نەچێتە سەر بەشەکانی خوارەوە */
+            padding-bottom: 120px; 
         }
         .container {
             background: white;
@@ -40,16 +40,28 @@
         }
         .authority-badge {
             text-align: center;
-            font-size: 15px;
-            font-weight: bold;
-            color: #1a365d;
-            background: #feebc8;
-            padding: 8px 12px;
-            border-radius: 20px;
-            margin-bottom: 12px;
-            display: inline-block;
+            background: linear-gradient(135deg, #1a365d, #2a4365);
+            color: white;
+            padding: 12px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: block;
             width: 100%;
-            border: 1px solid #fbd38d;
+            box-shadow: 0 4px 12px rgba(26, 54, 93, 0.2);
+        }
+        /* لێرەدا فۆنتی ناونیشانی یەکەم گۆڕدراوە بۆ فۆنتێکی نوێ و سایزەکەی ۲ پلە بچووک کراوەتەوە */
+        .main-title {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px; /* لە ١٦ لادراوە بۆ ١٤ */
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+            color: #ffffff;
+        }
+        .sub-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fbd38d; 
         }
         .header {
             text-align: center;
@@ -227,57 +239,41 @@
             border-radius: 8px;
         }
 
-        /* ستایلی بۆکسی زیرەک بۆ هاندانی دابەزاندن */
-        .pwa-prompt {
-            display: none;
+        .pwa-loop-prompt {
             position: fixed;
             bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 420px;
+            width: 92%;
+            max-width: 430px;
             background: #1a365d;
             color: white;
-            padding: 12px 18px;
+            padding: 14px 18px;
             border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
             z-index: 9999;
-            align-items: center;
-            justify-content: space-between;
+            text-align: right;
             font-size: 14px;
-            animation: slideUp 0.4s ease-out;
+            line-height: 1.6;
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #ecc94b;
         }
-        .pwa-prompt text { flex-grow: 1; line-height: 1.4; }
-        .pwa-btn {
-            background: #ecc94b;
-            color: #1a365d;
-            border: none;
-            padding: 8px 12px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-right: 10px;
-            white-space: nowrap;
-        }
-        .pwa-close {
-            color: #a0aec0;
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            margin-right: 8px;
-        }
-        @keyframes slideUp {
-            from { bottom: -100px; opacity: 0; }
-            to { bottom: 15px; opacity: 1; }
+        .pwa-loop-text {
+            display: block;
+            min-height: 45px;
+            transition: opacity 0.3s ease-in-out;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="authority-badge">👮‍♂️ ڕێپێدراوی هاتووچۆ : ڕاستی محمد حیدر</div>
-    <div class="header">🚗 غه‌رامه‌ی مۆڵەتی شۆفێری 🚗</div>
+    <div class="authority-badge">
+        <div class="main-title">🏛️ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌</div>
+        <div class="sub-title">👮‍♂️ ڕێپێدراوی هاتووچۆ : ڕاستی محمد حیدر</div>
+    </div>
+    
+    <div class="header">🚗  غه‌رامه‌ی مۆڵه‌تی شۆفێری 🚗</div>
     
     <div class="toggle-container">
         <span id="status-text" style="font-weight: bold; color: #48bb78;">✓ داشكاندنی له‌ ٢٠٪ چالاکە</span>
@@ -330,15 +326,8 @@
     </div>
 </div>
 
-<div id="ios-prompt" class="pwa-prompt">
-    <button class="pwa-close" onclick="this.parentElement.style.display='none'">×</button>
-    <span style="line-height:1.5; text-align:right;">📲 بۆ ئەوەی بێتە سەر شاشەی مۆبایلەکەت: کلیک لەسەر نیشانەی <b>Share <span style="font-size:16px;">⎋</span></b> بکە لە خوارەوە و پاشان <b>Add to Home Screen</b> هەڵبژێره.</span>
-</div>
-
-<div id="android-prompt" class="pwa-prompt">
-    <button class="pwa-close" onclick="this.parentElement.style.display='none'">×</button>
-    <span style="text-align:right; flex-grow:1;">📥 غەرامەی مۆڵەت وەک ئەپ دابەزێنە:</span>
-    <button class="pwa-btn" id="btnAndroidInstall">دابەزاندن</button>
+<div id="pwa-loop-container" class="pwa-loop-prompt">
+    <span id="pwa-loop-content" class="pwa-loop-text">🤖 باردەبێت...</span>
 </div>
 
 <div class="modal-overlay" id="picker-modal" onclick="closeModal(event)">
@@ -368,39 +357,30 @@
 
     calculate();
 
-    // ناسینەوەی جۆری مۆبایل و دەرخستنی بۆکسی ڕێنمایی
-    document.addEventListener("DOMContentLoaded", function() {
-        const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    const hints = [
+        "🤖 <b>بۆ خستنە سەر شاشە لە ئەندرۆید:</b> لە سەرەوە کلیک لەسەر <b>سێ خاڵەکە ⋮</b> بکە و پاشان <b>Add to Home screen</b> هەڵبژێرە.",
+        "🍏 <b>بۆ خستنە سەر شاشە لە ئایفۆن:</b> لە Safari کلیک لەسەر نیشانەی <b>Share ⎋</b> بکە لە خوارەوە و پاشان <b>Add to Home Screen</b> هەڵبژێرە."
+    ];
+    
+    let currentHintIndex = 0;
+    const contentElement = document.getElementById('pwa-loop-content');
 
-        if (!isStandalone) {
-            if (isIos) {
-                // ئەگەر ئایفۆن بێت دوای ٣ چرکە ڕێنماییەکە دێتە سەر شاشە
-                setTimeout(() => {
-                    document.getElementById('ios-prompt').style.display = 'flex';
-                }, 3000);
-            }
-        }
-    });
+    function rotateHints() {
+        contentElement.style.opacity = 0; 
+        setTimeout(() => {
+            contentElement.innerHTML = hints[currentHintIndex];
+            contentElement.style.opacity = 1; 
+            currentHintIndex = (currentHintIndex + 1) % hints.length;
+        }, 300);
+    }
 
-    // بەشی ئەندرۆید بۆ دابەزاندنی ڕاستەوخۆ
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('android-prompt').style.display = 'flex';
-    });
-
-    document.getElementById('btnAndroidInstall').addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                document.getElementById('android-prompt').style.display = 'none';
-            }
-            deferredPrompt = null;
-        }
-    });
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (!isStandalone) {
+        rotateHints();
+        setInterval(rotateHints, 5000); 
+    } else {
+        document.getElementById('pwa-loop-container').style.display = 'none';
+    }
 
     function openModal(type) {
         const modal = document.getElementById('picker-modal');
