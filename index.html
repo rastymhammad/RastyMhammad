@@ -119,7 +119,7 @@
         .theme-toggle-btn {
             position: absolute;
             top: 26px;
-            left: 30px;
+            left: 25px; /* کەمێک زیاتر لای چەپ جێگیر کراوە */
             background: var(--theme-btn-bg);
             border: 1px solid var(--theme-btn-border);
             color: var(--theme-btn-text);
@@ -138,7 +138,8 @@
             text-align: center;
             background: var(--badge-bg);
             color: var(--badge-text);
-            padding: 12px;
+            /* لێرەدا لای چەپی باجەکە 50px بۆشایی دراوە بۆ ئەوەی دەقەکە نەچێتە ژێر دوگمەکە */
+            padding: 12px 12px 12px 50px; 
             border-radius: 15px;
             margin-bottom: 15px;
             display: block;
@@ -465,14 +466,13 @@
     let selectedMonth = today.getMonth() + 1; 
     let selectedYear = today.getFullYear();
 
-    // بەها جێگیرە بەردەوامەکان بۆ ئەنیمەیشن
     let currentValues = { total: 0, fine: 0, duration: 0 };
 
     document.getElementById('day-btn').textContent = selectedDay;
     document.getElementById('month-btn').textContent = selectedMonth;
     document.getElementById('year-btn').textContent = selectedYear;
 
-    calculate(true); // جاری یەکەم بەبێ ئەنیمەیشن با خێرا بێت
+    calculate(true);
 
     function toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -488,7 +488,6 @@
         }
     }
 
-    // زانیارییەکانی خستنە سەر شاشە
     const hints = [
         "🤖 <b>بۆ خستنە سەر شاشە لە ئەندرۆید:</b> لە سەرەوە کلیک لەسەر <b>سێ خاڵەکە ⋮</b> بکە و پاشان <b>Add to Home screen</b> هەڵبژێرە.",
         "🍏 <b>بۆ خستنە سەر شاشە لە ئایفۆن:</b> لە Safari کلیک لەسەر نیشانەی <b>Share ⎋</b> بکە لە خوارەوە و پاشان <b>Add to Home Screen</b> هەڵبژێرە."
@@ -511,7 +510,6 @@
         document.getElementById('pwa-loop-container').style.display = 'none';
     }
 
-    // فەنکشنی دیاریکردنی ژمارەی ڕۆژەکانی مانگ بە شێوەیەکی داینامیکی و زیرەک
     function getDaysInMonth(month, year) {
         return new Date(year, month, 0).getDate();
     }
@@ -546,7 +544,6 @@
                 item.onclick = function() {
                     selectedMonth = i;
                     document.getElementById('month-btn').textContent = i;
-                    // پاراستنی لۆجیک ئەگەر ڕۆژەکە لە مانگی نوێدا بوونی نەبوو (نموونە ۳۱ی مانگی ٤)
                     const maxDays = getDaysInMonth(i, selectedYear);
                     if (selectedDay > maxDays) {
                         selectedDay = maxDays;
@@ -584,7 +581,6 @@
         document.getElementById('picker-modal').style.display = 'none';
     }
 
-    // ئەنیمەیشنی ژمارەکان بە شێوەیەکی مۆدێرن
     function animateValue(id, start, end, duration, isCurrency = true) {
         if (start === end) {
             document.getElementById(id).textContent = end.toLocaleString() + (isCurrency ? " دینار" : " مانگ");
@@ -686,14 +682,12 @@
             animateValue('total-price', currentValues.total, totalPrice, 400, true);
         }
 
-        // پاشەکەوتکردنی بەهاکان بۆ گۆڕانکاری داهاتوو
         currentValues.duration = targetMonths;
         currentValues.fine = finalFine;
         currentValues.total = totalPrice;
 
         document.getElementById('fee-price').textContent = baseFee.toLocaleString() + " دینار";
 
-        // گۆڕینی ڕەنگی داینامیکی
         const mainContainer = document.getElementById('main-container');
         if (expiryDate < currentDate && finalFine > 0) {
             document.documentElement.style.setProperty('--dynamic-status-color', '#e53e3e');
@@ -706,7 +700,6 @@
         }
     }
 
-    // فەنکشنی کۆپیکردنی ڕاپۆرتەکە
     function copyReport() {
         const expiryStr = `${selectedYear}/${selectedMonth}/${selectedDay}`;
         const durationStr = document.getElementById('duration-text').textContent;
