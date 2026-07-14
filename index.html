@@ -7,13 +7,14 @@
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="غەرامەی مۆڵەت">
+    <meta name="apple-mobile-web-app-title" content="هاتووچۆی هەڵەبجە">
     
     <link rel="manifest" id="pwa-manifest">
     <meta name="theme-color" content="#1a365d">
 
-    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/300/traffic-light.png">
+    <link class="apple-touch-icon" href="https://img.icons8.com/fluency/300/traffic-light.png">
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/300/traffic-light.png">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vaak-co/rabar-font@main/dist/font-face.css">
 
     <style>
@@ -53,9 +54,9 @@
             --btn-copy-bg: #2b6cb0;
             --btn-copy-text: white;
             --dynamic-status-color: #48bb78;
-            
-            --marquee-bg: #e2e8f0;
-            --marquee-text-color: #1a365d;
+            --marquee-bg: #fff5f5;
+            --marquee-border: #fed7d7;
+            --admin-border: #cbd5e1;
         }
 
         [data-theme="dark"] {
@@ -93,14 +94,14 @@
             --theme-btn-text: #ffffff;
             --btn-copy-bg: #38bdf8;
             --btn-copy-text: #0f172a;
-            
-            --marquee-bg: #0f172a;
-            --marquee-text-color: #38bdf8;
+            --marquee-bg: rgba(239, 68, 68, 0.1);
+            --marquee-border: rgba(239, 68, 68, 0.2);
+            --admin-border: #475569;
         }
 
         * {
             box-sizing: border-box;
-            font-family: 'Rabar', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Rabar', sans-serif !important;
             margin: 0;
             padding: 0;
             transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
@@ -153,6 +154,8 @@
             display: block;
             width: 100%;
             box-shadow: 0 4px 12px rgba(26, 54, 93, 0.1);
+            cursor: pointer;
+            user-select: none;
         }
         .main-title {
             font-size: 13.5px; 
@@ -168,43 +171,189 @@
         }
         [data-theme="dark"] .sub-title { color: #38bdf8; }
         
-        /* چاککردنی ئاراستەی نووسینە جوڵاوەکە (ڕاست بۆ چەپ) */
-        .marquee-box {
+        .tabs-container {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 5px;
+            border: none;
+            background: var(--header-bg);
+            color: var(--input-text);
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12.5px;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            background: #2b6cb0;
+            color: white;
+        }
+        [data-theme="dark"] .tab-btn.active { background: #38bdf8; color: #0f172a; }
+
+        /* بەشی تابی ئەدمین بە شێوەیەکی بنەڕەتی شاراوەیە */
+        #tab-admin {
+            display: none; 
+        }
+
+        .section-panel { display: none; }
+        .section-panel.active { display: block; }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--label-color);
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .custom-num-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--input-border);
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--input-text);
+            background: var(--input-bg);
+            text-align: center;
+        }
+        .custom-num-input::-webkit-outer-spin-button,
+        .custom-num-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .custom-num-input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .plate-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: flex-end;
+        }
+        .plate-num-box {
+            flex: 1;
+        }
+        .plate-letter-box {
+            width: 70px;
+            flex: 0 0 70px;
+        }
+        .custom-select {
+            width: 100%;
+            padding: 12px 5px;
+            border: 2px solid var(--input-border);
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--input-text);
+            background: var(--input-bg);
+            text-align: center;
+            text-align-last: center;
+            cursor: pointer;
+        }
+
+        .status-alert {
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 13.5px;
+            text-align: center;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            display: none;
+        }
+        .status-alert.has-fines {
+            background-color: #fff5f5;
+            border: 2px solid #fed7d7;
+            color: #e53e3e;
+        }
+        .status-alert.no-fines {
+            background-color: #f0fff4;
+            border: 2px solid #c6f6d5;
+            color: #38a169;
+        }
+
+        [data-theme="dark"] .status-alert.has-fines {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+        [data-theme="dark"] .status-alert.no-fines {
+            background-color: rgba(72, 187, 120, 0.1);
+            border-color: rgba(72, 187, 120, 0.3);
+            color: #4ade80;
+        }
+
+        .admin-list {
+            margin-top: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid var(--admin-border);
+            border-radius: 8px;
+            padding: 5px;
+        }
+        .admin-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 8px;
+            border-bottom: 1px solid var(--admin-border);
+            font-size: 13px;
+            color: var(--input-text);
+        }
+        .admin-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-item:last-child { border-bottom: none; }
+        .btn-delete {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .marquee-wrapper {
             width: 100%;
             overflow: hidden;
-            background: var(--marquee-bg);
-            border-radius: 10px;
-            padding: 8px 0;
+            background-color: var(--marquee-bg);
+            border: 1px solid var(--marquee-border);
+            border-radius: 8px;
+            padding: 5px 0;
             margin-bottom: 15px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
             display: flex;
             align-items: center;
         }
-        .marquee-content {
+        .marquee-container {
             display: inline-block;
             white-space: nowrap;
-            font-size: 12.5px;
-            font-weight: bold;
-            color: var(--marquee-text-color);
-            animation: scroll-rtl 25s linear infinite;
+            animation: scroll-left-to-right 22s linear infinite;
         }
-        
-        /* لە ژینگەی RTLدا بۆ ئەوەی لە ڕاستەوە بڕوات بۆ چەپ دەبێت بەهای گواستنەوە پێچەوانە بکرێتەوە */
-        @keyframes scroll-rtl {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        .marquee-container span {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--fine-color);
+            padding-left: 50px;
+        }
+        @keyframes scroll-left-to-right {
+            0% { transform: translate3d(-100%, 0, 0); }
+            100% { transform: translate3d(100%, 0, 0); }
         }
 
-        .header {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--header-text);
-            margin-bottom: 20px;
-            background: var(--header-bg);
-            padding: 12px;
-            border-radius: 12px;
-        }
         .toggle-container {
             display: flex;
             justify-content: space-between;
@@ -212,7 +361,7 @@
             background: var(--toggle-bg);
             padding: 12px;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid var(--toggle-border);
         }
         .switch {
@@ -246,7 +395,7 @@
             border: 1px solid var(--date-border);
             border-radius: 12px;
             padding: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .date-title {
             text-align: center;
@@ -281,58 +430,6 @@
             background: var(--input-bg);
             cursor: pointer;
         }
-        .date-custom-input:hover { border-color: #cbd5e0; }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--modal-overlay);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background: var(--modal-bg);
-            padding: 20px;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 340px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            text-align: center;
-            animation: fadeIn 0.2s ease-out;
-        }
-        .modal-content h3 {
-            margin-bottom: 15px;
-            color: var(--modal-text);
-            font-size: 15px;
-        }
-        .number-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            max-height: 260px;
-            overflow-y: auto;
-            padding: 5px;
-        }
-        .grid-item {
-            padding: 10px;
-            background: var(--grid-bg);
-            border-radius: 8px;
-            font-weight: bold;
-            color: var(--input-text);
-            cursor: pointer;
-            user-select: none;
-        }
-        .grid-item:hover {
-            background: #4299e1;
-            color: white;
-        }
-        
-        @keyframes fadeIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
 
         .results {
             background: var(--results-bg);
@@ -358,6 +455,26 @@
         .fine-row { color: var(--fine-color); font-weight: bold; }
         .fee-row { color: var(--fee-color); font-weight: bold; }
 
+        .user-violations-list {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
+        .user-violation-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-bottom: 1px dashed var(--input-border);
+            font-size: 13px;
+            color: var(--input-text);
+        }
+        .user-violation-item:last-child { border-bottom: none; }
+
         .btn-copy {
             width: 100%;
             padding: 12px;
@@ -375,7 +492,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             margin-bottom: 5px;
         }
-        .btn-copy:active { transform: scale(0.98); }
         
         .info-text {
             font-size: 12px;
@@ -388,30 +504,40 @@
             border-radius: 8px;
         }
 
-        .pwa-loop-prompt {
+        .modal-overlay {
+            display: none;
             position: fixed;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 92%;
-            max-width: 430px;
-            background: #1a365d;
-            color: white;
-            padding: 14px 18px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            z-index: 9999;
-            text-align: right;
-            font-size: 13.5px;
-            line-height: 1.6;
-            transition: all 0.3s ease-in-out;
-            border: 1px solid #ecc94b;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--modal-overlay);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
-        .pwa-loop-text {
-            display: block;
-            min-height: 45px;
-            transition: opacity 0.3s ease-in-out;
+        .modal-content {
+            background: var(--modal-bg);
+            padding: 20px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 340px;
+            text-align: center;
         }
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            max-height: 260px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        .grid-item {
+            padding: 10px;
+            background: var(--grid-bg);
+            border-radius: 8px;
+            font-weight: bold;
+            color: var(--input-text);
+            cursor: pointer;
+        }
+        .grid-item:hover { background: #4299e1; color: white; }
     </style>
 </head>
 <body>
@@ -419,73 +545,158 @@
 <div class="container" id="main-container">
     <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
 
-    <div class="authority-badge">
+    <!-- لۆگۆ یان ناوەکە کە بە ٣ کلیک دەبێتە دەروازەی چوونە ژوورەوەی ئەدمین -->
+    <div class="authority-badge" onclick="handleLogoClick()">
         <div class="main-title">🏛️ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌</div>
-        <div class="sub-title">👮‍♂️ئاماده‌كردنی ڕێپێدراوی هاتووچۆ : ڕاستی محمد حیدر </div>
+        <div class="sub-title">👮‍♂️ ڕێپێدراوی هاتووچۆ : ڕاستی محمد حیدر</div>
     </div>
     
-    <div class="marquee-box">
-        <div class="marquee-content">
-            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹ڕێپێدراو : ئامانج محمد
-        </div>
-    </div>
-    
-    <div class="header">🚗  غه‌رامه‌ی مۆڵه‌تی شۆفێری 🚗</div>
-    
-    <div class="toggle-container">
-        <span id="status-text" style="font-weight: bold; color: #48bb78;">✓ داشكاندنی غەرامە (٢٠٪) چالاکە</span>
-        <label class="switch">
-            <input type="checkbox" id="university-toggle" checked onchange="calculate()">
-            <span class="slider"></span>
-        </label>
+    <div class="tabs-container">
+        <button class="tab-btn active" id="tab-license" onclick="switchTab('license')">🚗 غەرامەی مۆڵەت</button>
+        <button class="tab-btn" id="tab-vehicle" onclick="switchTab('vehicle')">🚘 غەرامەی تابلۆی ئۆتۆمبێلی پارێزگای هه‌ڵه‌بجه‌</button>
+        <!-- تابی ئەدمین لێرەیە بەڵام بە شێوەیەکی بنەڕەتی شاردراوەتەوە -->
+        <button class="tab-btn" id="tab-admin" onclick="switchTab('admin')">🔑 بەڕێوەبەر</button>
     </div>
 
-    <div class="date-section">
-        <div class="date-title">📅 ڕێکەوتی بەسەرچوونی مۆڵەت:</div>
-        <div class="date-inputs">
-            <div class="date-box">
-                <label>ڕۆژ</label>
-                <div class="date-custom-input" id="day-btn" onclick="openModal('day')">10</div>
+    <!-- بەشی یەکەم: غەرامەی مۆڵەت -->
+    <div id="panel-license" class="section-panel active">
+        <div class="marquee-wrapper">
+            <div class="marquee-container">
+                <span> بۆ تازه‌كردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ له‌گه‌ڵ خۆت بێنه‌: پشكنینی چاو + كارتی نیشتیمانی + كارتی زانیاری + په‌ساپۆرت سه‌رجه‌میان ئه‌سلی بن‌ استنساخ ناخوات </span>
             </div>
-            <div class="date-box">
-                <label>مانگ</label>
-                <div class="date-custom-input" id="month-btn" onclick="openModal('month')">7</div>
-            </div>
-            <div class="date-box">
-                <label>ساڵ</label>
-                <div class="date-custom-input" id="year-btn" onclick="openModal('year')">2026</div>
+        </div>
+        
+        <div class="toggle-container">
+            <span id="status-text" style="font-weight: bold; color: #48bb78;">✓ داشكاندنی غەرامە (٢٠٪) چالاکە</span>
+            <label class="switch">
+                <input type="checkbox" id="university-toggle" checked onchange="calculate()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="date-section">
+            <div class="date-title">📅 ڕێکەوتی بەسەرچوونی مۆڵەت:</div>
+            <div class="date-inputs">
+                <div class="date-box">
+                    <label>ڕۆژ</label>
+                    <div class="date-custom-input" id="day-btn" onclick="openModal('day')">1</div>
+                </div>
+                <div class="date-box">
+                    <label>مانگ</label>
+                    <div class="date-custom-input" id="month-btn" onclick="openModal('month')">1</div>
+                </div>
+                <div class="date-box">
+                    <label>ساڵ</label>
+                    <div class="date-custom-input" id="year-btn" onclick="openModal('year')">2026</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="results">
+    <!-- بەشی دووەم: غەرامەی ئۆتۆمبێل -->
+    <div id="panel-vehicle" class="section-panel">
+        <div class="toggle-container">
+            <span id="vehicle-discount-text" style="font-weight: bold; color: #48bb78;">✓ داشكاندنی غەرامەی ئۆتۆمبێل (٢٠٪) چالاکە</span>
+            <label class="switch">
+                <input type="checkbox" id="vehicle-toggle" checked onchange="calculateVehicle()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="plate-container">
+            <div class="plate-num-box">
+                <label style="display:block; font-size:12px; color:var(--label-color); margin-bottom:5px; font-weight:bold;">🔢 ژمارەی ئۆتۆمبێل:</label>
+                <input type="number" id="input-plate-num" class="custom-num-input" placeholder="نموونە: 48512" oninput="calculateVehicle()">
+            </div>
+            <div class="plate-letter-box">
+                <label style="display:block; font-size:12px; color:var(--label-color); margin-bottom:5px; font-weight:bold;">🔤 پیت:</label>
+                <select id="select-plate-letter" class="custom-select" onchange="calculateVehicle()">
+                    <option value="">-</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="vehicle-status-alert" class="status-alert"></div>
+        
+        <div class="user-violations-list" id="user-violations-display"></div>
+    </div>
+
+    <!-- بەشی سێیەم: تابی بەڕێوەبەر -->
+    <div id="panel-admin" class="section-panel">
+        <div style="background: var(--toggle-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--toggle-border);">
+            <!-- دوگمەی سوور بۆ دەرچوون و داخستنی تابی ئەدمین -->
+            <button class="btn-copy" style="background: #e53e3e; color: white; margin-bottom: 15px;" onclick="closeAdminTab()">🚪 دەرچوون و شاردنەوە</button>
+
+            <h4 style="margin-bottom: 10px; color: var(--input-text); text-align: center;">📥 تۆمارکردنی سەرپێچی نوێ</h4>
+            
+            <div class="plate-container">
+                <div class="plate-num-box">
+                    <label style="font-size:11px; font-weight:bold; color:var(--label-color);">🔢 ژمارەی تابلۆ:</label>
+                    <input type="number" id="admin-plate-num" class="custom-num-input" placeholder="48512">
+                </div>
+                <div class="plate-letter-box">
+                    <label style="font-size:11px; font-weight:bold; color:var(--label-color);">🔤 پیت:</label>
+                    <select id="admin-plate-letter" class="custom-select">
+                        <option value="">-</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>📝 جۆری سەرپێچی:</label>
+                <input type="text" id="admin-fine-type" class="custom-num-input" placeholder="نموونە: تیژڕەوی / کامێرا" style="text-align: right;">
+            </div>
+
+            <div class="input-group">
+                <label>💰 بڕی غەرامە (دینار):</label>
+                <input type="number" id="admin-fine-amount" class="custom-num-input" placeholder="30000">
+            </div>
+
+            <button class="btn-copy" style="background: #48bb78; color: white;" onclick="saveViolation()">💾 پاشەکەوتکردنی سەرپێچی</button>
+        </div>
+
+        <h4 style="margin-top: 15px; color: var(--input-text);">📋 سەرپێچییەکان:</h4>
+        
+        <div class="plate-container" style="margin-top: 10px; margin-bottom: 10px; gap: 8px;">
+            <div class="plate-num-box">
+                <input type="number" id="admin-search-num" class="custom-num-input" placeholder="🔍 گەڕان بەپێی ژمارە..." oninput="loadViolationsList()" style="text-align: center; font-size: 13px; padding: 10px;">
+            </div>
+            <div class="plate-letter-box">
+                <select id="admin-search-letter" class="custom-select" onchange="loadViolationsList()" style="font-size: 13px; padding: 10px 5px;">
+                    <option value="ALL">*</option>
+                    <option value="">-</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="admin-list" id="violations-list-container"></div>
+    </div>
+
+    <!-- ئەنجامەکان -->
+    <div class="results" id="results-box">
         <div class="result-row total-row">
-            <span>💰 کۆی گشتی:</span>
+            <span>💰 کۆی گشتی بۆ پێدان:</span>
             <span id="total-price">0 دینار</span>
         </div>
         <div class="result-row fine-row">
-            <span>🔴 غرامە:</span>
+            <span>🔴 غرامە (دوای داشکان):</span>
             <span id="fine-price">0 دینار</span>
         </div>
-        <div class="result-row fee-row">
+        <div class="result-row fee-row" id="fee-row-display">
             <span>🔵 رسومات:</span>
             <span id="fee-price">60,000 دینار</span>
         </div>
-        <div class="result-row">
+        <div id="duration-row" class="result-row">
             <span>⏳ ماوەی بەسەرچوون:</span>
             <span id="duration-text">0 مانگ</span>
         </div>
     </div>
 
-    <button class="btn-copy" onclick="copyReport()">📋 کۆپیکردنی ڕاپۆرتی غەرامە</button>
+    <button class="btn-copy" id="btn-copy-report" onclick="copyReport()">📋 کۆپیکردنی ڕاپۆرتی غەرامە</button>
 
-    <div class="info-text">
-        ℹ️ <b>یاساکانی مۆڵەت:</b> ڕسووماتی جێگیر ٦٠,٠٠٠ دینارە. غەرامەکان بە چوار قۆناغ ئەژمار دەکرێن (پێش 3.12.2019 جێگیرە بە ١٥ هەزار، لە نێوان 4.12.2019 بۆ 6.7.2022 ساڵانەیە بە ٣٠ هەزار، لە نێوان 7.7.2022 بۆ 17.7.2022 ساڵانەیە بە ٢٠ هەزار، و لە 18.7.2022 بەدواوە مانگانەیە بە ٥ هەزار دینار بە لێخۆشبوونی یەک مانگ لە ئەژمارکردنی ماوە و غەرامە).
+    <div class="info-text" id="license-info-text">
+        ℹ️ <b>تێبینی:</b> غەرامەکان بە چوار قۆناغ ئەژمار دەکرێن: پێش 3.12.2019 جێگیرە بە ١٥ هەزار، لە نێوان 4.12.2019 بۆ 6.7.2022 ساڵانەیە بە ٣٠ هەزار، لە نێوان 7.7.2022 بۆ 17.7.2022 ساڵانەیە بە ٢٠ هەزار، و لە 18.7.2022 بەدواوە مانگانەیە بە ٥ هەزار دینار (بە لێخۆشبوونی یەک مانگ). دەتوانیت لە ڕێگەی دوگمەکانی سەرەوە لە نێوان ئەژمارکردنی غەرامەی مۆڵەت و غەرامەی سەرپێچی ئۆتۆمبێلەکان بگۆڕیت.
     </div>
-</div>
-
-<div id="pwa-loop-container" class="pwa-loop-prompt">
-    <span id="pwa-loop-content" class="pwa-loop-text">🤖 باردەبێت...</span>
 </div>
 
 <div class="modal-overlay" id="picker-modal" onclick="closeModal(event)">
@@ -496,184 +707,111 @@
 </div>
 
 <script>
-    const manifestData = {
-        "name": "سیستەمی غەرامەی مۆڵەت - هەڵەبجە",
-        "short_name": "غەرامەی مۆڵەت",
-        "description": "ئەپی ئەژمارکردنی غەرامەی مۆڵەتی شۆفێری هاتووچۆی هەڵەبجە",
-        "start_url": window.location.href,
-        "display": "standalone",
-        "background_color": "#1a365d",
-        "theme_color": "#1a365d",
-        "orientation": "portrait-primary",
-        "icons": [
-            {
-                "src": "https://img.icons8.com/fluency/300/traffic-light.png",
-                "sizes": "300x300",
-                "type": "image/png",
-                "purpose": "any maskable"
-            }
-        ]
-    };
-    const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
-    document.getElementById('pwa-manifest').setAttribute('href', URL.createObjectURL(manifestBlob));
-
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        document.getElementById('theme-btn').textContent = '☀️';
-    }
-
-    const today = new Date();
-    let selectedDay = today.getDate();
-    let selectedMonth = today.getMonth() + 1; 
-    let selectedYear = today.getFullYear();
-
-    let currentValues = { total: 0, fine: 0, duration: 0 };
-
-    document.getElementById('day-btn').textContent = selectedDay;
-    document.getElementById('month-btn').textContent = selectedMonth;
-    document.getElementById('year-btn').textContent = selectedYear;
-
-    calculate(true);
-
-    function toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const themeBtn = document.getElementById('theme-btn');
-        if (currentTheme === 'dark') {
-            document.documentElement.removeAttribute('data-theme');
-            themeBtn.textContent = '🌙';
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeBtn.textContent = '☀️';
-            localStorage.setItem('theme', 'dark');
-        }
-    }
-
-    const hints = [
-        "🤖 <b>بۆ خستنە سەر شاشە لە ئەندرۆید:</b> لە سەرەوە کلیک لەسەر <b>سێ خاڵەکە ⋮</b> بکە و پاشان <b>Add to Home screen</b> هەڵبژێرە.",
-        "🍏 <b>بۆ خستنە سەر شاشە لە ئایفۆن:</b> لە Safari کلیک لەسەر نیشانەی <b>Share ⎋</b> بکە لە خوارەوە و پاشان <b>Add to Home Screen</b> هەڵبژێرە."
-    ];
-    let currentHintIndex = 0;
-    const contentElement = document.getElementById('pwa-loop-content');
+    let activeTab = 'license'; 
+    let dbViolations = JSON.parse(localStorage.getItem('traffic_violations_v2')) || [];
+    let currentPickerType = 'day';
     
-    function rotateHints() {
-        if(!contentElement) return;
-        contentElement.style.opacity = 0; 
-        setTimeout(() => {
-            contentElement.innerHTML = hints[currentHintIndex];
-            contentElement.style.opacity = 1; 
-            currentHintIndex = (currentHintIndex + 1) % hints.length;
-        }, 300);
-    }
+    let logoClickCount = 0;
+    let logoClickTimeout;
+
+    const englishLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+
+    const selectLetter = document.getElementById('select-plate-letter');
+    const adminSelectLetter = document.getElementById('admin-plate-letter');
+    const adminSearchLetter = document.getElementById('admin-search-letter');
     
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    if (!isStandalone) {
-        if(contentElement) {
-            contentElement.innerHTML = hints[0];
-            currentHintIndex = 1; 
-        }
-        setInterval(rotateHints, 5000); 
-    } else {
-        document.getElementById('pwa-loop-container').style.display = 'none';
+    function populateLetterDropdowns() {
+        englishLetters.forEach(char => {
+            addOptionToSelects(char);
+        });
     }
 
-    function getDaysInMonth(month, year) {
-        return new Date(year, month, 0).getDate();
+    function addOptionToSelects(char) {
+        let opt1 = document.createElement('option'); opt1.value = char; opt1.textContent = char; selectLetter.appendChild(opt1);
+        let opt2 = document.createElement('option'); opt2.value = char; opt2.textContent = char; adminSelectLetter.appendChild(opt2);
+        let opt3 = document.createElement('option'); opt3.value = char; opt3.textContent = char; adminSearchLetter.appendChild(opt3);
     }
 
-    function openModal(type) {
-        const modal = document.getElementById('picker-modal');
-        const title = document.getElementById('modal-title');
-        const grid = document.getElementById('modal-grid');
-        grid.innerHTML = ''; 
+    populateLetterDropdowns();
+
+    // دانانی بەرواری ئەمڕۆی ڕاستەقینەی کۆمپیوتەرەکە وەک بەرواری سەرەتایی مۆڵەت
+    (function setTodayAsDefaultDate() {
+        const now = new Date();
+        document.getElementById('day-btn').textContent = now.getDate();
+        document.getElementById('month-btn').textContent = now.getMonth() + 1;
+        document.getElementById('year-btn').textContent = now.getFullYear();
+    })();
+
+    // نیشاندانی تابی ئەدمین بە ٣ کلیک
+    function handleLogoClick() {
+        logoClickCount++;
+        clearTimeout(logoClickTimeout);
         
-        if (type === 'day') {
-            title.textContent = '📅 ڕۆژێك دیاری بكه‌';
-            const daysCount = getDaysInMonth(selectedMonth, selectedYear);
-            for (let i = 1; i <= daysCount; i++) {
-                let item = document.createElement('div');
-                item.className = 'grid-item';
-                item.textContent = i;
-                item.onclick = function() {
-                    selectedDay = i;
-                    document.getElementById('day-btn').textContent = i;
-                    modal.style.display = 'none';
-                    calculate();
-                };
-                grid.appendChild(item);
-            }
-        } else if (type === 'month') {
-            title.textContent = '📅 مانگێك دیاری بكه‌';
-            for (let i = 1; i <= 12; i++) {
-                let item = document.createElement('div');
-                item.className = 'grid-item';
-                item.textContent = i;
-                item.onclick = function() {
-                    selectedMonth = i;
-                    document.getElementById('month-btn').textContent = i;
-                    const maxDays = getDaysInMonth(i, selectedYear);
-                    if (selectedDay > maxDays) {
-                        selectedDay = maxDays;
-                        document.getElementById('day-btn').textContent = maxDays;
-                    }
-                    modal.style.display = 'none';
-                    calculate();
-                };
-                grid.appendChild(item);
-            }
-        } else if (type === 'year') {
-            title.textContent = '📅 ساڵێك دیاری بكه‌';
-            for (let i = 2000; i <= 2035; i++) {
-                let item = document.createElement('div');
-                item.className = 'grid-item';
-                item.textContent = i;
-                item.onclick = function() {
-                    selectedYear = i;
-                    document.getElementById('year-btn').textContent = i;
-                    const maxDays = getDaysInMonth(selectedMonth, i);
-                    if (selectedDay > maxDays) {
-                        selectedDay = maxDays;
-                        document.getElementById('day-btn').textContent = maxDays;
-                    }
-                    modal.style.display = 'none';
-                    calculate();
-                };
-                grid.appendChild(item);
+        logoClickTimeout = setTimeout(() => {
+            logoClickCount = 0;
+        }, 2000);
+
+        if (logoClickCount === 3) {
+            logoClickCount = 0;
+            const pass = prompt("تکایە تێپەڕەوشەی ئەدمین (پاسوۆرد) بنووسە:");
+            if (pass === "          ") {
+                document.getElementById('tab-admin').style.display = 'block'; 
+                switchTab('admin'); 
+                alert("🔓 بەشی بەڕێوەبەر بە سەرکەوتوویی کرایەوە.");
+            } else {
+                alert("✕ تێپەڕەوشە هەڵەیە!");
             }
         }
-        modal.style.display = 'flex';
     }
 
-    function closeModal(event) {
-        document.getElementById('picker-modal').style.display = 'none';
+    // فەنکشن بۆ داخستن و دووبارە شاردنەوەی تابی ئەدمین
+    function closeAdminTab() {
+        document.getElementById('tab-admin').style.display = 'none'; // دوگمەکە دەشاردرێتەوە
+        switchTab('license'); // دەچێتەوە سەر یەکەم تاب
+        alert("🔒 بەشی بەڕێوەبەر بە سەرکەوتوویی داخرایەوە و شاردرایەوە.");
     }
 
-    function animateValue(id, start, end, duration, isCurrency = true) {
-        let el = document.getElementById(id);
-        if(!el) return;
-        if (start === end) {
-            el.textContent = end.toLocaleString() + (isCurrency ? " دینار" : " مانگ");
-            return;
+    // سیستەمی گۆڕینی تابلۆکان
+    function switchTab(tab) {
+        // ئەگەر بەکارهێنەر لە تابی ئەدمین بوو و چوونە سەر تابێکی تر، دوگمەی ئەدمین دەشاردرێتەوە
+        if (activeTab === 'admin' && tab !== 'admin') {
+            document.getElementById('tab-admin').style.display = 'none';
         }
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const current = Math.floor(progress * (end - start) + start);
-            el.textContent = current.toLocaleString() + (isCurrency ? " دینار" : " مانگ");
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
-        };
-        window.requestAnimationFrame(step);
+
+        activeTab = tab;
+        document.getElementById('tab-license').classList.toggle('active', tab === 'license');
+        document.getElementById('tab-vehicle').classList.toggle('active', tab === 'vehicle');
+        document.getElementById('tab-admin').classList.toggle('active', tab === 'admin');
+        
+        document.getElementById('panel-license').classList.toggle('active', tab === 'license');
+        document.getElementById('panel-vehicle').classList.toggle('active', tab === 'vehicle');
+        document.getElementById('panel-admin').classList.toggle('active', tab === 'admin');
+        
+        document.getElementById('duration-row').style.display = tab === 'license' ? 'flex' : 'none';
+        document.getElementById('fee-row-display').style.display = tab === 'license' ? 'flex' : 'none';
+        document.getElementById('results-box').style.display = tab === 'admin' ? 'none' : 'block';
+        document.getElementById('btn-copy-report').style.display = tab === 'admin' ? 'none' : 'block';
+        document.getElementById('license-info-text').style.display = tab === 'license' ? 'block' : 'none';
+
+        if (tab === 'license') {
+            calculate();
+        } else if (tab === 'vehicle') {
+            calculateVehicle();
+        } else if (tab === 'admin') {
+            document.getElementById('admin-search-num').value = '';
+            document.getElementById('admin-search-letter').value = 'ALL';
+            loadViolationsList();
+        }
     }
 
-    function calculate(skipAnimation = false) {
+    // ئەژمارکردنی غەرامەی مۆڵەت (چوار قۆناغی ڕاستەقینە)
+    function calculate() {
+        if (activeTab !== 'license') return;
+
         const isDiscount = document.getElementById('university-toggle').checked;
         const statusText = document.getElementById('status-text');
-        
-        if(isDiscount) {
+
+        if (isDiscount) {
             statusText.textContent = "✓ داشكاندنی غەرامە (٢٠٪) چالاکە";
             statusText.style.color = "#48bb78";
         } else {
@@ -681,18 +819,25 @@
             statusText.style.color = "#e53e3e";
         }
 
-        const expiryDate = new Date(selectedYear, selectedMonth - 1, selectedDay);
-        const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        
-        const date2019 = new Date(2019, 11, 3);          
-        const date2022_Start = new Date(2022, 6, 6);     
-        const date2022_M3_Start = new Date(2022, 6, 7);  
-        const date2022_M3_End = new Date(2022, 6, 17);   
+        const day = parseInt(document.getElementById('day-btn').textContent);
+        const month = parseInt(document.getElementById('month-btn').textContent);
+        const year = parseInt(document.getElementById('year-btn').textContent);
+
+        const expiryDate = new Date(year, month - 1, day);
+        const currentDate = new Date();
+        expiryDate.setHours(0, 0, 0, 0);
+        currentDate.setHours(0, 0, 0, 0);
+
+        // چوار قۆناغی یاسایی
+        const date2019 = new Date(2019, 11, 3);          // 3.12.2019
+        const date2022_Start = new Date(2022, 6, 6);      // 6.7.2022
+        const date2022_M3_Start = new Date(2022, 6, 7);   // 7.7.2022
+        const date2022_M3_End = new Date(2022, 6, 17);    // 17.7.2022
 
         let totalMonths = 0;
         let displayMonths = 0;
         let fine = 0;
-        let baseFee = 60000; 
+        const baseFee = 60000;
 
         if (expiryDate < currentDate) {
             let yearDiff = currentDate.getFullYear() - expiryDate.getFullYear();
@@ -704,13 +849,15 @@
                 totalMonths += 1;
             }
             displayMonths = totalMonths;
-            
+
             if (expiryDate <= date2019) {
+                // قۆناغی یەکەم: جێگیر بە ١٥ هەزار
                 fine = 15000;
-            } 
+            }
             else if (expiryDate >= date2022_M3_Start && expiryDate <= date2022_M3_End) {
+                // قۆناغی سێیەم: ساڵانە بە ٢٠ هەزار
                 let totalYears = currentDate.getFullYear() - expiryDate.getFullYear();
-                if (currentDate.getMonth() > expiryDate.getMonth() || 
+                if (currentDate.getMonth() > expiryDate.getMonth() ||
                    (currentDate.getMonth() === expiryDate.getMonth() && currentDate.getDate() > expiryDate.getDate())) {
                     totalYears += 1;
                 }
@@ -718,115 +865,289 @@
                 fine = totalYears * 20000;
             }
             else if (expiryDate > date2019 && expiryDate <= date2022_Start) {
+                // قۆناغی دووەم: ساڵانە بە ٣٠ هەزار
                 let totalYears = currentDate.getFullYear() - expiryDate.getFullYear();
-                if (currentDate.getMonth() > expiryDate.getMonth() || 
+                if (currentDate.getMonth() > expiryDate.getMonth() ||
                    (currentDate.getMonth() === expiryDate.getMonth() && currentDate.getDate() > expiryDate.getDate())) {
                     totalYears += 1;
                 }
                 if (totalYears === 0) totalYears = 1;
                 fine = totalYears * 30000;
-            } 
+            }
             else {
-                const finePerMonth = 5000; 
-                let chargeableMonths = totalMonths > 1 ? totalMonths - 1 : 0;
+                // قۆناغی چوارەم: مانگانە بە ٥ هەزار (لێخۆشبوونی یەک مانگ)
+                const finePerMonth = 5000;
+                let chargeableMonths = totalMonths > 0 ? totalMonths - 1 : 0;
                 fine = chargeableMonths * finePerMonth;
                 displayMonths = chargeableMonths;
             }
         }
 
-        let finalFine = fine;
+        let finalFine = isDiscount ? fine * 0.8 : fine;
+        let total = finalFine + baseFee;
+
+        document.getElementById('duration-text').textContent = `${displayMonths} مانگ`;
+        document.getElementById('fine-price').textContent = `${finalFine.toLocaleString()} دینار`;
+        document.getElementById('fee-price').textContent = `${baseFee.toLocaleString()} دینار`;
+        document.getElementById('total-price').textContent = `${total.toLocaleString()} دینار`;
+    }
+
+    // ئەژمارکردنی غەرامەی ئۆتۆمبێل
+    function calculateVehicle() {
+        if (activeTab !== 'vehicle') return;
+
+        const plateNum = document.getElementById('input-plate-num').value.trim();
+        const plateLetter = document.getElementById('select-plate-letter').value;
+        const isDiscount = document.getElementById('vehicle-toggle').checked;
+        const discountText = document.getElementById('vehicle-discount-text');
+        const alertBox = document.getElementById('vehicle-status-alert');
+        const userListDisplay = document.getElementById('user-violations-display');
+
         if (isDiscount) {
-            finalFine = fine * 0.8;
-        }
-
-        let totalPrice = baseFee + finalFine;
-        let targetMonths = (expiryDate < currentDate ? displayMonths : 0);
-
-        if (skipAnimation) {
-            document.getElementById('duration-text').textContent = targetMonths + " مانگ";
-            document.getElementById('fine-price').textContent = finalFine.toLocaleString() + " دینار";
-            document.getElementById('total-price').textContent = totalPrice.toLocaleString() + " دینار";
+            discountText.textContent = "✓ داشكاندنی غەرامەی ئۆتۆمبێل (٢٠٪) چالاکە";
+            discountText.style.color = "#48bb78";
         } else {
-            animateValue('duration-text', currentValues.duration, targetMonths, 250, false);
-            animateValue('fine-price', currentValues.fine, finalFine, 350, true);
-            animateValue('total-price', currentValues.total, totalPrice, 400, true);
+            discountText.textContent = "✕ داشكاندنی غەرامەی ئۆتۆمبێل (٢0٪) ناچالاکە";
+            discountText.style.color = "#e53e3e";
         }
 
-        currentValues.duration = targetMonths;
-        currentValues.fine = finalFine;
-        currentValues.total = totalPrice;
-
-        document.getElementById('fee-price').textContent = baseFee.toLocaleString() + " دینار";
-
-        const mainContainer = document.getElementById('main-container');
-        if (expiryDate < currentDate && finalFine > 0) {
-            document.documentElement.style.setProperty('--dynamic-status-color', '#e53e3e');
-            mainContainer.style.borderColor = 'rgba(229, 62, 62, 0.4)';
-            mainContainer.style.boxShadow = '0 10px 30px rgba(229, 62, 62, 0.15)';
-        } else {
-            document.documentElement.style.setProperty('--dynamic-status-color', '#48bb78');
-            mainContainer.style.borderColor = 'rgba(72, 187, 120, 0.4)';
-            mainContainer.style.boxShadow = '0 10px 30px rgba(72, 187, 120, 0.15)';
+        if (!plateNum) {
+            alertBox.style.display = 'none';
+            userListDisplay.style.display = 'none';
+            document.getElementById('fine-price').textContent = "0 دینار";
+            document.getElementById('total-price').textContent = "0 دینار";
+            return;
         }
-    }
 
-    function copyReport() {
-        const expiryStr = `${selectedYear}/${selectedMonth}/${selectedDay}`;
-        const durationStr = document.getElementById('duration-text').textContent;
-        const fineStr = document.getElementById('fine-price').textContent;
-        const feeStr = document.getElementById('fee-price').textContent;
-        const totalStr = document.getElementById('total-price').textContent;
+        const matches = dbViolations.filter(v => v.num === plateNum && v.letter === plateLetter);
         
-        const reportText = 
-`🏛️ ڕاپۆرتی حسابکردنی غەرامەی مۆڵەت
-📌 بەڕێوەبەرایەتی هاتووچۆی پارێزگای هەڵەبجە 
-----------------------------------
-📅 ڕێکەوتی بەسەرچوون: ${expiryStr}
-⏳ ماوەی بەسەرچوون: ${durationStr}
-🔴 بڕی غەرامە: ${fineStr}
-🔵 بڕی ڕسوومات: ${feeStr}
-💰 کۆی گشتی بۆ پێدان: ${totalStr}
-----------------------------------
-🤖 ئاماده‌كردنی ڕێپێدراو : ڕاستی محمد حیدر`;
+        userListDisplay.innerHTML = '';
 
-        navigator.clipboard.writeText(reportText).then(() => {
-            alert("✓ ڕاپۆرتەکە بە سەرکەوتوویی کۆپی کرا لەسەر مۆبایلەکەت!");
-        }).catch(err => {
-            alert("✕ کێشەیەک لە کۆپیکردنەکەدا هەیە");
-        });
-    }
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            const swCode = `
-                const CACHE_NAME = 'traffic-halabja-v2';
-                const ASSETS = [
-                    '${window.location.pathname}',
-                    'https://img.icons8.com/fluency/300/traffic-light.png',
-                    'https://cdn.jsdelivr.net/gh/vaak-co/rabar-font@main/dist/font-face.css'
-                ];
-
-                self.addEventListener('install', e => {
-                    e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
-                });
-
-                self.addEventListener('activate', e => {
-                    e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => k !== CACHE_NAME && caches.delete(k)))).then(() => self.clients.claim()));
-                });
-
-                self.addEventListener('fetch', e => {
-                    e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
-                });
-            `;
+        if (matches.length > 0) {
+            let totalBaseFine = 0;
             
-            const swBlob = new Blob([swCode], {type: 'application/javascript'});
-            const swUrl = URL.createObjectURL(swBlob);
+            alertBox.className = "status-alert has-fines";
+            alertBox.innerHTML = `⚠️ سەرپێچی دۆزرایەوە! <br> ئۆتۆمبێلی (${plateNum} - ${plateLetter || '-'}) <b>${matches.length}</b> سەرپێچی لەسەرە.`;
+            alertBox.style.display = 'block';
 
-            navigator.serviceWorker.register(swUrl, { scope: './' })
-                .then(reg => console.log('PWA Offline System Activated!'))
-                .catch(err => console.log('PWA Error:', err));
+            matches.forEach(v => {
+                totalBaseFine += parseFloat(v.fine); 
+                const item = document.createElement('div');
+                item.className = 'user-violation-item';
+                item.innerHTML = `<span>📝 ${v.type}</span> <b>${parseFloat(v.fine).toLocaleString()} دینار</b>`;
+                userListDisplay.appendChild(item);
+            });
+            userListDisplay.style.display = 'block';
+
+            let fineAfterDiscount = isDiscount ? totalBaseFine * 0.8 : totalBaseFine;
+            
+            document.getElementById('fine-price').textContent = `${fineAfterDiscount.toLocaleString()} دینار`;
+            document.getElementById('total-price').textContent = `${fineAfterDiscount.toLocaleString()} دینار`;
+        } else {
+            alertBox.className = "status-alert no-fines";
+            alertBox.innerHTML = `✓ هیچ سەرپێچییەک نەدۆزرایەوە بۆ ئۆتۆمبێلی (${plateNum} - ${plateLetter || '-'})`;
+            alertBox.style.display = 'block';
+            userListDisplay.style.display = 'none';
+
+            document.getElementById('fine-price').textContent = "0 دینار";
+            document.getElementById('total-price').textContent = "0 دینار";
+        }
+    }
+
+    // پاشەکەوتکردنی سەرپێچی
+    function saveViolation() {
+        const num = document.getElementById('admin-plate-num').value.trim();
+        const letter = document.getElementById('admin-plate-letter').value;
+        const type = document.getElementById('admin-fine-type').value.trim() || 'سەرپێچی گشتی';
+        const fine = parseFloat(document.getElementById('admin-fine-amount').value) || 0;
+
+        if (!num || fine <= 0) {
+            alert("⚠️ تکایە ژمارەی تابلۆ و بڕی غەرامە بە دروستی بنووسە");
+            return;
+        }
+
+        const id = Date.now(); 
+        dbViolations.push({ id, num, letter, type, fine: parseFloat(fine) }); 
+        localStorage.setItem('traffic_violations_v2', JSON.stringify(dbViolations));
+        
+        alert(`✓ سەرپێچی [${type}] بە بڕی ${fine.toLocaleString()} دینار بۆ ئۆتۆمبێلی (${num} ${letter || '-'}) تۆمارکرا.`);
+        
+        document.getElementById('admin-fine-type').value = '';
+        document.getElementById('admin-fine-amount').value = '';
+        document.getElementById('admin-plate-num').value = '';
+        
+        loadViolationsList();
+    }
+
+    // سڕینەوەی سەرپێچی
+    function deleteViolation(id) {
+        if (confirm(`دڵنیای لە سڕینەوەی ئەم سەرپێچییە؟`)) {
+            dbViolations = dbViolations.filter(v => v.id !== id);
+            localStorage.setItem('traffic_violations_v2', JSON.stringify(dbViolations));
+            loadViolationsList();
+        }
+    }
+
+    // بارکردنی لیستی سەرپێچییەکان
+    function loadViolationsList() {
+        const container = document.getElementById('violations-list-container');
+        const searchNum = document.getElementById('admin-search-num').value.trim();
+        const searchLetter = document.getElementById('admin-search-letter').value;
+        container.innerHTML = '';
+        
+        let filteredViolations = dbViolations;
+        
+        if (searchNum !== "") {
+            filteredViolations = filteredViolations.filter(v => v.num.includes(searchNum));
+        }
+        
+        if (searchLetter !== "ALL") {
+            filteredViolations = filteredViolations.filter(v => v.letter === searchLetter);
+        }
+        
+        if (filteredViolations.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding: 15px; color: var(--label-color); font-size: 13px;">هیچ سەرپێچییەک نەدۆزرایەوە.</div>';
+            return;
+        }
+
+        filteredViolations.forEach(v => {
+            const item = document.createElement('div');
+            item.className = 'admin-item';
+            item.innerHTML = `
+                <div class="admin-item-row">
+                    <span>🚘 تابلۆ: <b>${v.num} - ${v.letter || '-'}</b></span>
+                    <button class="btn-delete" onclick="deleteViolation(${v.id})">سڕینەوە</button>
+                </div>
+                <div style="font-size: 11px; color: var(--label-color); text-align: right;">🛠️ جۆر: ${v.type} | 💰 بڕ: ${parseFloat(v.fine).toLocaleString()} د.ع</div>
+            `;
+            container.appendChild(item);
         });
     }
+
+    // مۆداڵی دیاریکردنی ڕێکەوت
+    function openModal(type) {
+        currentPickerType = type;
+        const modal = document.getElementById('picker-modal');
+        const title = document.getElementById('modal-title');
+        const grid = document.getElementById('modal-grid');
+        
+        grid.innerHTML = '';
+        modal.style.display = 'flex';
+
+        if (type === 'day') {
+            title.textContent = 'دیاریکردنی ڕۆژ';
+            for (let i = 1; i <= 31; i++) {
+                createGridItem(i, grid);
+            }
+        } else if (type === 'month') {
+            title.textContent = 'دیاریکردنی مانگ';
+            for (let i = 1; i <= 12; i++) {
+                createGridItem(i, grid);
+            }
+        } else if (type === 'year') {
+            title.textContent = 'دیاریکردنی ساڵ';
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear - 15; i <= currentYear + 15; i++) {
+                createGridItem(i, grid);
+            }
+        }
+    }
+
+    function createGridItem(value, container) {
+        const item = document.createElement('div');
+        item.className = 'grid-item';
+        item.textContent = value;
+        item.onclick = () => selectValue(value);
+        container.appendChild(item);
+    }
+
+    function selectValue(value) {
+        document.getElementById(`${currentPickerType}-btn`).textContent = value;
+        closeModal();
+        calculate();
+    }
+
+    function closeModal(event) {
+        if (!event || event.target === document.getElementById('picker-modal')) {
+            document.getElementById('picker-modal').style.display = 'none';
+        }
+    }
+
+    // گۆڕینی تیمی ڕووناکی/تاریکی (Dark Mode)
+    function toggleTheme() {
+        const body = document.documentElement;
+        const btn = document.getElementById('theme-btn');
+        if (body.getAttribute('data-theme') === 'dark') {
+            body.removeAttribute('data-theme');
+            btn.textContent = '🌙';
+            localStorage.setItem('theme', 'light');
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            btn.textContent = '☀️';
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.getElementById('theme-btn').textContent = '☀️';
+    }
+
+    // کۆپیکردنی ڕاپۆرتەکە
+    function copyReport() {
+        let reportText = "";
+        if (activeTab === 'license') {
+            const day = document.getElementById('day-btn').textContent;
+            const month = document.getElementById('month-btn').textContent;
+            const year = document.getElementById('year-btn').textContent;
+            const duration = document.getElementById('duration-text').textContent;
+            const fine = document.getElementById('fine-price').textContent;
+            const fee = document.getElementById('fee-price').textContent;
+            const total = document.getElementById('total-price').textContent;
+
+            reportText = `🏛️ بەڕێوەبەرایەتی هاتووچۆی پارێزگای هەڵەبجە\n`;
+            reportText += `📄 ڕاپۆرتی ئەژمارکردنی غەرامەی مۆڵەت\n`;
+            reportText += `----------------------------\n`;
+            reportText += `📅 ڕێکەوتی بەسەرچوون: ${year}/${month}/${day}\n`;
+            reportText += `⏳ ماوەی بەسەرچوون: ${duration}\n`;
+            reportText += `🔴 غەرامە (دوای داشکان): ${fine}\n`;
+            reportText += `🔵 ڕسومات: ${fee}\n`;
+            reportText += `----------------------------\n`;
+            reportText += `💰 کۆی گشتی بۆ پێدان: ${total}\n`;
+            reportText += `👮‍♂️ ڕێپێدراو: ڕاستی محمد حیدر`;
+        } else if (activeTab === 'vehicle') {
+            const plateNum = document.getElementById('input-plate-num').value.trim();
+            const plateLetter = document.getElementById('select-plate-letter').value || '-';
+            const total = document.getElementById('total-price').textContent;
+            const matches = dbViolations.filter(v => v.num === plateNum && v.letter === (plateLetter === '-' ? '' : plateLetter));
+
+            reportText = `🏛️ بەڕێوەبەرایەتی هاتووچۆی پارێزگای هەڵەبجە\n`;
+            reportText += `📄 ڕاپۆرتی غەرامەی ئۆتۆمبێل\n`;
+            reportText += `----------------------------\n`;
+            reportText += `🚘 ژمارەی تابلۆ: ${plateNum} ${plateLetter}\n`;
+            reportText += `📊 ژمارەی سەرپێچی: ${matches.length}\n`;
+            if (matches.length > 0) {
+                reportText += `📋 سەرپێچییەکان:\n`;
+                matches.forEach((v, index) => {
+                    reportText += `   ${index + 1}. ${v.type} - ${parseFloat(v.fine).toLocaleString()} دینار\n`;
+                });
+            }
+            reportText += `----------------------------\n`;
+            reportText += `💰 کۆی گشتی (دوای داشکان): ${total}\n`;
+            reportText += `👮‍♂️ ڕێپێدراو: ڕاستی محمد حیدر`;
+        }
+
+        if (reportText) {
+            navigator.clipboard.writeText(reportText).then(() => {
+                alert("✓ ڕاپۆرتەکە بە سەرکەوتوویی کۆپی کرا!");
+            }).catch(err => {
+                alert("✕ کێشەیەک ڕوویدا لە کاتی کۆپیکردنی ڕاپۆرتەکە.");
+            });
+        }
+    }
+
+    calculate();
 </script>
 
 </body>
