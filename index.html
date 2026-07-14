@@ -168,6 +168,7 @@
         }
         [data-theme="dark"] .sub-title { color: #38bdf8; }
         
+        /* چاککردنی ئاراستەی نووسینە جوڵاوەکە (ڕاست بۆ چەپ) */
         .marquee-box {
             width: 100%;
             overflow: hidden;
@@ -185,15 +186,15 @@
             font-size: 12.5px;
             font-weight: bold;
             color: var(--marquee-text-color);
-            animation: scroll-right 28s linear infinite;
-            animation-delay: 2s; /* دواکەوتنی ٢ چرکە پێش دەستپێکردن */
-            padding-right: 100%;
+            animation: scroll-rtl 25s linear infinite;
         }
         
-        @keyframes scroll-right {
+        /* لە ژینگەی RTLدا بۆ ئەوەی لە ڕاستەوە بڕوات بۆ چەپ دەبێت بەهای گواستنەوە پێچەوانە بکرێتەوە */
+        @keyframes scroll-rtl {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
+
         .header {
             text-align: center;
             font-size: 18px;
@@ -425,7 +426,7 @@
     
     <div class="marquee-box">
         <div class="marquee-content">
-            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹
+            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹ڕێپێدراو : ئامانج محمد
         </div>
     </div>
     
