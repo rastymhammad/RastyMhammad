@@ -185,18 +185,13 @@
             font-size: 12.5px;
             font-weight: bold;
             color: var(--marquee-text-color);
-            /* گۆڕانکاری لێرەدایە: ٣٥ چرکە خاوکردنەوە، ٢ چرکە دواکەوتن، backwards بۆ پاراستنی دۆخی سەرەتا */
             animation: scroll-rtl 40s linear -10s infinite;
         }
         
-       @keyframes scroll-rtl {
-    from {
-        transform: translateX(-20%);
-    }
-    to {
-        transform: translateX(100%);
-    }
-}
+        @keyframes scroll-rtl {
+            from { transform: translateX(-20%); }
+            to { transform: translateX(100%); }
+        }
 
         .header {
             text-align: center;
@@ -285,6 +280,27 @@
             cursor: pointer;
         }
         .date-custom-input:hover { border-color: #cbd5e0; }
+
+        .save-section {
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .btn-save {
+            width: 100%;
+            padding: 10px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-save:active { transform: scale(0.98); }
 
         .modal-overlay {
             display: none;
@@ -448,7 +464,7 @@
         <div class="date-inputs">
             <div class="date-box">
                 <label>ڕۆژ</label>
-                <div class="date-custom-input" id="day-btn" onclick="openModal('day')">10</div>
+                <div class="date-custom-input" id="day-btn" onclick="openModal('day')">17</div>
             </div>
             <div class="date-box">
                 <label>مانگ</label>
@@ -459,6 +475,12 @@
                 <div class="date-custom-input" id="year-btn" onclick="openModal('year')">2026</div>
             </div>
         </div>
+    </div>
+
+    <div class="save-section">
+        <div class="date-title">🔔  ئـــاگـــادارکــــردنەوە </div>
+        <p style="font-size: 12px; color: var(--label-color);">بەرواری مۆڵەتەکەت پاشەکەوت بکە. کاتێک کەمتر لە ٣ مانگی مابێت، مۆبایلەکەت ئاگادارت ده‌كاته‌وه‌   .</p>
+        <button class="btn-save" onclick="saveLicenseDate()">💾 پاشەکەوتکردنی بەروار و چالاککردنی ئەلەرەم</button>
     </div>
 
     <div class="results">
@@ -499,6 +521,51 @@
 </div>
 
 <script>
+    // کۆدی سێرڤس وۆرکەری نوێکراوە کە بەروارەکە لە ناو تێکستی نۆتفیکەیشنەکە نیشان دەدات
+    const swCode = `
+        self.addEventListener('install', (e) => self.skipWaiting());
+        self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+        
+        self.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'SCHEDULE_NOTIFICATION') {
+                const daysDiff = event.data.daysDiff;
+                const formattedDate = event.data.dateString;
+                
+                self.registration.showNotification("🚨 ئاگادارکردنەوەی هاتووچۆی هەڵەبجە", {
+                    body: '🔔 مۆڵەتەکەت بەسەردەچێت لە ڕێکەوتی (' + formattedDate + ')\\nتەنها ' + daysDiff + ' ڕۆژی ماوە! تکایە سەردانی هاتووچۆ بکە بۆ نوێکردنەوە.',
+                    icon: "https://img.icons8.com/fluency/300/traffic-light.png",
+                    badge: "https://img.icons8.com/fluency/300/traffic-light.png",
+                    tag: 'alarm-license-expiry',
+                    renotify: true,
+                    requireInteraction: true, // هێشتنەوەی نۆتفیکەیشن وەک ئەلەرەم لەسەر شاشە
+                    vibrate: [500, 200, 500, 200, 500, 200, 500], // شێوازی لەرینەوەی بەهێز
+                    silent: false,
+                    data: { url: self.location.origin }
+                });
+            }
+        });
+
+        self.addEventListener('notificationclick', (event) => {
+            event.notification.close();
+            event.waitUntil(
+                clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+                    if (clientList.length > 0) {
+                        return clientList[0].focus();
+                    }
+                    return clients.openWindow(event.notification.data.url || '/');
+                })
+            );
+        });
+    `;
+    
+    if ('serviceWorker' in navigator) {
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl).then(reg => {
+            console.log('Advanced Alarm SW Registered.');
+        }).catch(err => console.log('SW registration failed:', err));
+    }
+
     const manifestData = {
         "name": "سیستەمی غەرامەی مۆڵەت - هەڵەبجە",
         "short_name": "غەرامەی مۆڵەت",
@@ -526,10 +593,10 @@
         document.getElementById('theme-btn').textContent = '☀️';
     }
 
-    const today = new Date();
-    let selectedDay = today.getDate();
-    let selectedMonth = today.getMonth() + 1; 
-    let selectedYear = today.getFullYear();
+    const systemDate = new Date(); 
+    let selectedDay = systemDate.getDate();
+    let selectedMonth = systemDate.getMonth() + 1; 
+    let selectedYear = systemDate.getFullYear();
 
     let currentValues = { total: 0, fine: 0, duration: 0 };
 
@@ -538,6 +605,7 @@
     document.getElementById('year-btn').textContent = selectedYear;
 
     calculate(true);
+    checkNotificationOnLoad(); 
 
     function toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -685,7 +753,7 @@
         }
 
         const expiryDate = new Date(selectedYear, selectedMonth - 1, selectedDay);
-        const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const currentDate = new Date(systemDate.getFullYear(), systemDate.getMonth(), systemDate.getDate());
         
         const date2019 = new Date(2019, 11, 3);          
         const date2022_Start = new Date(2022, 6, 6);     
@@ -773,6 +841,73 @@
         }
     }
 
+    function saveLicenseDate() {
+        const expiryDate = new Date(selectedYear, selectedMonth - 1, selectedDay);
+        const currentDate = new Date(systemDate.getFullYear(), systemDate.getMonth(), systemDate.getDate());
+
+        if (expiryDate <= currentDate) {
+            alert("⚠️ ئەم بەروارە پێشتر بەسەرچووە! ناتوانرێت ئاگادارکردنەوەی بۆ دابنرێت.");
+            return;
+        }
+
+        // پاشەکەوتکردنی داتا بە جیاواز بۆ دەرهێنانی بەرواری دروست
+        localStorage.setItem('saved_license_day', selectedDay);
+        localStorage.setItem('saved_license_month', selectedMonth);
+        localStorage.setItem('saved_license_year', selectedYear);
+        localStorage.setItem('saved_license_date', expiryDate.toISOString());
+        
+        alert("✓ بەرواری مۆڵەتەکەت پاشەکەوت کرا و مۆڵەتی نۆتفیکەیشنی وەک ئەلەرەم چالاک بوو!");
+
+        if ("Notification" in window) {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    checkAndShowNotification(expiryDate);
+                }
+            });
+        }
+    }
+
+    function checkNotificationOnLoad() {
+        const savedDate = localStorage.getItem('saved_license_date');
+        if (savedDate) {
+            checkAndShowNotification(new Date(savedDate));
+        }
+    }
+
+    function checkAndShowNotification(expiryDate) {
+        const currentDate = new Date(systemDate.getFullYear(), systemDate.getMonth(), systemDate.getDate());
+        
+        const timeDiff = expiryDate.getTime() - currentDate.getTime();
+        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+        // وەرگرتنی بەرواری فۆرماتکراو لە لۆکاڵ ستۆریج
+        const d = localStorage.getItem('saved_license_day') || selectedDay;
+        const m = localStorage.getItem('saved_license_month') || selectedMonth;
+        const y = localStorage.getItem('saved_license_year') || selectedYear;
+        const formattedDate = `${y}/${m}/${d}`;
+
+        if (daysDiff > 0 && daysDiff <= 90) {
+            if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                // ناردنی فەرمان لەگەڵ بەرواری بەسەرچوون بۆ سێرڤس وۆرکەر
+                navigator.serviceWorker.controller.postMessage({
+                    type: 'SCHEDULE_NOTIFICATION',
+                    daysDiff: daysDiff,
+                    dateString: formattedDate
+                });
+            } else if ("Notification" in window && Notification.permission === "granted") {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.showNotification("🚨 ئاگادارکردنەوەی هاتووچۆی هەڵەبجە", {
+                        body: `🔔 مۆڵەتەکەت بەسەردەچێت لە ڕێکەوتی (${formattedDate})\nتەنها ${daysDiff} ڕۆژی ماوە! تکایە سەردانی هاتووچۆ بکە بۆ نوێکردنەوە.`,
+                        icon: "https://img.icons8.com/fluency/300/traffic-light.png",
+                        requireInteraction: true,
+                        vibrate: [500, 200, 500, 200, 500, 200, 500],
+                        silent: false
+                    });
+                });
+            }
+        }
+    }
+
     function copyReport() {
         const expiryStr = `${selectedYear}/${selectedMonth}/${selectedDay}`;
         const durationStr = document.getElementById('duration-text').textContent;
@@ -780,57 +915,20 @@
         const feeStr = document.getElementById('fee-price').textContent;
         const totalStr = document.getElementById('total-price').textContent;
         
-        const reportText = 
-`🏛️ ڕاپۆرتی حسابکردنی غەرامەی مۆڵەت
-📌 بەڕێوەبەرایەتی هاتووچۆی پارێزگای هەڵەبجە 
-----------------------------------
-📅 ڕێکەوتی بەسەرچوون: ${expiryStr}
+        const reportText = `📊 ڕاپۆرتی ئەژمارکردنی غەرامە
+🗓️ بەرواری بەسەرچوون: ${expiryStr}
 ⏳ ماوەی بەسەرچوون: ${durationStr}
 🔴 بڕی غەرامە: ${fineStr}
-🔵 بڕی ڕسوومات: ${feeStr}
-💰 کۆی گشتی بۆ پێدان: ${totalStr}
-----------------------------------
-🤖 ئاماده‌كردنی ڕێپێدراو : ڕاستی محمد حیدر`;
+🔵 ڕسوومات: ${feeStr}
+💰 کۆی گشتی بۆ پارەدان: ${totalStr}
+🏛️ بەڕێوەبەرایەتی هاتووچۆی پارێزگای هەڵەبجە`;
 
         navigator.clipboard.writeText(reportText).then(() => {
-            alert("✓ ڕاپۆرتەکە بە سەرکەوتوویی کۆپی کرا لەسەر مۆبایلەکەت!");
-        }).catch(err => {
-            alert("✕ کێشەیەک لە کۆپیکردنەکەدا هەیە");
-        });
-    }
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            const swCode = `
-                const CACHE_NAME = 'traffic-halabja-v2';
-                const ASSETS = [
-                    '${window.location.pathname}',
-                    'https://img.icons8.com/fluency/300/traffic-light.png',
-                    'https://cdn.jsdelivr.net/gh/vaak-co/rabar-font@main/dist/font-face.css'
-                ];
-
-                self.addEventListener('install', e => {
-                    e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
-                });
-
-                self.addEventListener('activate', e => {
-                    e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => k !== CACHE_NAME && caches.delete(k)))).then(() => self.clients.claim()));
-                });
-
-                self.addEventListener('fetch', e => {
-                    e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
-                });
-            `;
-            
-            const swBlob = new Blob([swCode], {type: 'application/javascript'});
-            const swUrl = URL.createObjectURL(swBlob);
-
-            navigator.serviceWorker.register(swUrl, { scope: './' })
-                .then(reg => console.log('PWA Offline System Activated!'))
-                .catch(err => console.log('PWA Error:', err));
+            alert("✓ ڕاپۆرتەکە کۆپی کرا!");
+        }).catch(() => {
+            alert("✕ کێشەیەک لە کۆپیکردن کورت لێکەوتەوە.");
         });
     }
 </script>
-
 </body>
 </html>
