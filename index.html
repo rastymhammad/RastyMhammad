@@ -516,6 +516,10 @@
         </div>
     </div>
     
+    <div id="visitor-counter" style="text-align:center; font-size:11.5px; color:var(--info-text); margin-bottom:12px;">
+        👁️ سەردانیکردنی ئەمڕۆ: <b id="visitor-count-text">...</b>
+    </div>
+
     <div class="header">🚗  غه‌رامه‌ی مۆڵه‌تی شۆفێری 🚗</div>
     
     <div class="toggle-container">
@@ -654,6 +658,28 @@
 
     calculate(true);
     document.getElementById('results-box').style.opacity = '1';
+
+    function updateVisitorCounter() {
+        const el = document.getElementById('visitor-count-text');
+        if (!el) return;
+        const dateKey = new Date().toISOString().slice(0, 10); // ڕۆژی ئەمڕۆ
+        const namespace = 'traffic-halabja-app';
+        const countedFlag = 'counted_' + dateKey;
+        const alreadyCounted = sessionStorage.getItem(countedFlag);
+        const endpoint = alreadyCounted ? 'get' : 'hit';
+        const url = `https://abacus.jasoncameron.dev/${endpoint}/${namespace}/${dateKey}`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (!alreadyCounted) sessionStorage.setItem(countedFlag, '1');
+                el.textContent = data.value.toLocaleString();
+            })
+            .catch(() => {
+                el.textContent = '—';
+            });
+    }
+    updateVisitorCounter();
 
     function vibrate(ms = 15) {
         if (navigator.vibrate) {
