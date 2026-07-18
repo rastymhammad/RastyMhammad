@@ -574,7 +574,7 @@
 
     <div id="breakdown-toggle" style="display:none; text-align:center; margin-bottom:12px;">
         <button onclick="toggleBreakdown()" style="background:transparent; border:none; color:var(--total-color); font-size:12.5px; font-weight:bold; cursor:pointer; text-decoration:underline;">
-            🧮 <span id="breakdown-toggle-text">بزانە چۆن ئەم ژمارەیە هاتووە</span>
+            🧮 <span id="breakdown-toggle-text">بزانە چۆن ئەم غه‌رامه‌ هاتووە</span>
         </button>
         <div id="breakdown-box" style="display:none; text-align:right; background:var(--info-bg); border-radius:10px; padding:12px; margin-top:8px; font-size:12px; line-height:1.9; color:var(--info-text);"></div>
     </div>
@@ -646,6 +646,7 @@
     let selectedYear = today.getFullYear();
 
     let currentValues = { total: 0, fine: 0, duration: 0 };
+    let userSetDate = false;
 
     document.getElementById('day-btn').textContent = selectedDay;
     document.getElementById('month-btn').textContent = selectedMonth;
@@ -723,6 +724,7 @@
                 item.onclick = function() {
                     vibrate();
                     selectedDay = i;
+                    userSetDate = true;
                     document.getElementById('day-btn').textContent = i;
                     modal.style.display = 'none';
                     calculate();
@@ -738,6 +740,7 @@
                 item.onclick = function() {
                     vibrate();
                     selectedMonth = i;
+                    userSetDate = true;
                     document.getElementById('month-btn').textContent = i;
                     const maxDays = getDaysInMonth(i, selectedYear);
                     if (selectedDay > maxDays) {
@@ -758,6 +761,7 @@
                 item.onclick = function() {
                     vibrate();
                     selectedYear = i;
+                    userSetDate = true;
                     document.getElementById('year-btn').textContent = i;
                     const maxDays = getDaysInMonth(selectedMonth, i);
                     if (selectedDay > maxDays) {
@@ -909,7 +913,7 @@
             document.documentElement.style.setProperty('--dynamic-status-color', '#48bb78');
             mainContainer.style.borderColor = 'rgba(72, 187, 120, 0.4)';
             mainContainer.style.boxShadow = '0 10px 30px rgba(72, 187, 120, 0.15)';
-            okMessage.style.display = 'block';
+            okMessage.style.display = (userSetDate ? 'block' : 'none');
         }
 
         updateFuture();
