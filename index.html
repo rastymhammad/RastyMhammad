@@ -572,6 +572,13 @@
         </div>
     </div>
 
+    <div id="breakdown-toggle" style="display:none; text-align:center; margin-bottom:12px;">
+        <button onclick="toggleBreakdown()" style="background:transparent; border:none; color:var(--total-color); font-size:12.5px; font-weight:bold; cursor:pointer; text-decoration:underline;">
+            🧮 <span id="breakdown-toggle-text">بزانە چۆن ئەم ژمارەیە هاتووە</span>
+        </button>
+        <div id="breakdown-box" style="display:none; text-align:right; background:var(--info-bg); border-radius:10px; padding:12px; margin-top:8px; font-size:12px; line-height:1.9; color:var(--info-text);"></div>
+    </div>
+
     <div id="ok-message" style="display:none; text-align:center; background: rgba(72,187,120,0.12); color:#2f855a; border:1px solid rgba(72,187,120,0.3); border-radius:10px; padding:10px; margin-bottom:15px; font-weight:bold; font-size:13.5px;">
         ✅ مۆڵەتەکەت هێشتا بەسەرنەچووە، پێویست بە غەرامە ناکات
     </div>
@@ -579,7 +586,7 @@
     <button class="btn-copy" id="copy-btn" onclick="copyReport()">📋 کۆپیکردنی ڕاپۆرتی غەرامە</button>
 
     <div class="secondary-actions">
-        <button class="btn-secondary" onclick="openLocation()" style="flex:1;">📍 لۆكه‌یشنی به‌ڕێوه‌به‌رایه‌تی هاتووچۆی هه‌ڵه‌بجه‌</button>
+        <a class="btn-secondary" href="https://www.google.com/maps/search/?api=1&query=%D8%A8%D9%87%E2%80%8C%DA%95%DB%8E%D9%88%D9%87%E2%80%8C%D8%A8%D9%87%E2%80%8C%D8%B1%D8%A7%DB%8C%D9%87%E2%80%8C%D8%AA%DB%8C%20%D9%87%D8%A7%D8%AA%D9%88%D9%88%DA%86%DB%86%DB%8C%20%D9%BE%D8%A7%D8%B1%DB%8E%D8%B2%DA%AF%D8%A7%DB%8C%20%D9%87%D9%87%E2%80%8C%DA%B5%D9%87%E2%80%8C%D8%A8%D8%AC%D9%87%E2%80%8C" target="_blank" rel="noopener" style="flex:1; text-decoration:none;" onclick="vibrate()">📍 ڕێنیشاندەر بۆ بەڕێوەبەرایەتی</a>
     </div>
 
     <div class="info-text">
@@ -800,6 +807,8 @@
         let displayMonths = 0;
         let fine = 0;
         let baseFee = 60000;
+        let period = null;
+        let years = 0;
 
         if (expiryDate < asOfDate) {
             let yearDiff = asOfDate.getFullYear() - expiryDate.getFullYear();
@@ -812,6 +821,7 @@
 
             if (expiryDate <= date2019) {
                 fine = 15000;
+                period = 'before2019';
             }
             else if (expiryDate >= date2022_M3_Start && expiryDate <= date2022_M3_End) {
                 let totalYears = asOfDate.getFullYear() - expiryDate.getFullYear();
@@ -821,6 +831,8 @@
                 }
                 if (totalYears === 0) totalYears = 1;
                 fine = totalYears * 20000;
+                period = 'm3window';
+                years = totalYears;
             }
             else if (expiryDate > date2019 && expiryDate <= date2022_Start) {
                 let totalYears = asOfDate.getFullYear() - expiryDate.getFullYear();
@@ -830,12 +842,15 @@
                 }
                 if (totalYears === 0) totalYears = 1;
                 fine = totalYears * 30000;
+                period = '2019to2022';
+                years = totalYears;
             }
             else {
                 const finePerMonth = 5000;
                 let chargeableMonths = totalMonths > 1 ? totalMonths - 1 : 0;
                 fine = chargeableMonths * finePerMonth;
                 displayMonths = chargeableMonths;
+                period = 'after2022';
             }
         }
 
@@ -843,7 +858,7 @@
         let totalPrice = baseFee + finalFine;
         let targetMonths = (expiryDate < asOfDate ? displayMonths : 0);
 
-        return { fine: finalFine, total: totalPrice, months: targetMonths, baseFee };
+        return { fine: finalFine, rawFine: fine, total: totalPrice, months: targetMonths, baseFee, period, years, isDiscount };
     }
 
     function calculate(skipAnimation = false) {
@@ -898,6 +913,58 @@
         }
 
         updateFuture();
+        updateBreakdown(expiryDate, currentDate, result);
+    }
+
+    function updateBreakdown(expiryDate, currentDate, result) {
+        const toggleWrap = document.getElementById('breakdown-toggle');
+        const box = document.getElementById('breakdown-box');
+        const expiryStr = `${selectedDay}/${selectedMonth}/${selectedYear}`;
+
+        if (!(expiryDate < currentDate) || result.rawFine === 0) {
+            toggleWrap.style.display = 'none';
+            box.style.display = 'none';
+            return;
+        }
+
+        toggleWrap.style.display = 'block';
+
+        let periodLabel = '';
+        let ruleLine = '';
+        if (result.period === 'before2019') {
+            periodLabel = 'پێش ٣/١٢/٢٠١٩';
+            ruleLine = `لەم قۆناغەدا غەرامەکە جێگیرە و نایگۆڕدرێت: <b>١٥,٠٠٠ دینار</b>`;
+        } else if (result.period === '2019to2022') {
+            periodLabel = 'لە نێوان ٤/١٢/٢٠١٩ بۆ ٦/٧/٢٠٢٢';
+            ruleLine = `لەم قۆناغەدا غەرامەکە ساڵانەیە بە ٣٠,٠٠٠ دینار: <b>${result.years} ساڵ × ٣٠,٠٠٠ = ${(result.years * 30000).toLocaleString()} دینار</b>`;
+        } else if (result.period === 'm3window') {
+            periodLabel = 'لە نێوان ٧/٧/٢٠٢٢ بۆ ١٧/٧/٢٠٢٢';
+            ruleLine = `لەم قۆناغەدا غەرامەکە ساڵانەیە بە ٢٠,٠٠٠ دینار: <b>${result.years} ساڵ × ٢٠,٠٠٠ = ${(result.years * 20000).toLocaleString()} دینار</b>`;
+        } else if (result.period === 'after2022') {
+            periodLabel = 'لە ١٨/٧/٢٠٢٢ بەدواوە';
+            const chargeableMonths = result.months;
+            ruleLine = `لەم قۆناغەدا غەرامەکە مانگانەیە بە ٥,٠٠٠ دینار، لەگەڵ لێخۆشبوونی یەک مانگی یەکەم: <b>${chargeableMonths} مانگی حیسابکراو × ٥,٠٠٠ = ${(chargeableMonths * 5000).toLocaleString()} دینار</b>`;
+        }
+
+        const discountLine = result.isDiscount
+            ? `پاشان داشکاندنی ٢٠٪ کرا: <b>${result.rawFine.toLocaleString()} - ٪٢٠ = ${result.fine.toLocaleString()} دینار</b>`
+            : `داشکاندن چالاک نەبوو، غەرامەکە بە تەواوی ماوە: <b>${result.fine.toLocaleString()} دینار</b>`;
+
+        box.innerHTML = `
+            <div style="margin-bottom:6px;">📅 بەرواری بەسەرچوون: <b>${expiryStr}</b> — دەکەوێتە قۆناغی: <b>${periodLabel}</b></div>
+            <div style="margin-bottom:6px;">${ruleLine}</div>
+            <div style="margin-bottom:6px;">${discountLine}</div>
+            <div>➕ ڕسووماتی جێگیر: <b>٦٠,٠٠٠ دینار</b> &nbsp;➜&nbsp; کۆی گشتی: <b style="color:var(--total-color);">${result.total.toLocaleString()} دینار</b></div>
+        `;
+    }
+
+    function toggleBreakdown() {
+        vibrate();
+        const box = document.getElementById('breakdown-box');
+        const label = document.getElementById('breakdown-toggle-text');
+        const isOpen = box.style.display === 'block';
+        box.style.display = isOpen ? 'none' : 'block';
+        label.textContent = isOpen ? 'بزانە چۆن ئەم ژمارەیە هاتووە' : 'شاردنەوەی وردەکاری';
     }
 
     function updateFuture() {
@@ -914,12 +981,6 @@
 
         const result = computeFine(expiryDate, futureDate, isDiscount);
         document.getElementById('future-total').textContent = result.total.toLocaleString() + " دینار";
-    }
-
-    function openLocation() {
-        vibrate();
-        const query = encodeURIComponent('به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌');
-        window.location.href = `https://www.google.com/maps/search/?api=1&query=${query}`;
     }
 
     function copyReport() {
