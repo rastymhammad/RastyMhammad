@@ -53,6 +53,7 @@
             --btn-copy-bg: #2b6cb0;
             --btn-copy-text: white;
             --dynamic-status-color: #48bb78;
+            
             --marquee-bg: #e2e8f0;
             --marquee-text-color: #1a365d;
         }
@@ -92,6 +93,7 @@
             --theme-btn-text: #ffffff;
             --btn-copy-bg: #38bdf8;
             --btn-copy-text: #0f172a;
+            
             --marquee-bg: #0f172a;
             --marquee-text-color: #38bdf8;
         }
@@ -345,43 +347,6 @@
             background: #4299e1;
             color: white;
         }
-
-        /* بەشی پۆپئەپی نامەی فەرمی */
-        .notification-modal-content {
-            background: var(--modal-bg);
-            padding: 22px;
-            border-radius: 20px;
-            width: 92%;
-            max-width: 380px;
-            text-align: right;
-            border: 2px solid #ecc94b;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-        }
-        .notification-modal-content h2 {
-            color: #dd6b20;
-            font-size: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .notification-modal-body {
-            font-size: 13.5px;
-            color: var(--input-text);
-            line-height: 1.8;
-            margin-bottom: 20px;
-            white-space: pre-line;
-        }
-        .btn-modal-close {
-            width: 100%;
-            padding: 10px;
-            background: #1a365d;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
         
         @keyframes fadeIn {
             from { transform: scale(0.9); opacity: 0; }
@@ -466,6 +431,51 @@
             min-height: 45px;
             transition: opacity 0.3s ease-in-out;
         }
+
+        .onscreen-alarm {
+            display: none;
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            border-radius: 15px;
+            padding: 16px;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 18px rgba(229, 62, 62, 0.4);
+            border: 2px solid #fbd38d;
+            position: relative;
+            animation: pulse-alarm 1.2s ease-in-out infinite;
+        }
+        .onscreen-alarm.show { display: block; }
+        .onscreen-alarm-title {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .onscreen-alarm-text {
+            font-size: 13.5px;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+        .onscreen-alarm-close {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+        }
+        @keyframes pulse-alarm {
+            0%, 100% { box-shadow: 0 6px 18px rgba(229, 62, 62, 0.4); }
+            50% { box-shadow: 0 6px 26px rgba(229, 62, 62, 0.75); }
+        }
     </style>
 </head>
 <body>
@@ -473,14 +483,20 @@
 <div class="container" id="main-container">
     <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
 
+    <div class="onscreen-alarm" id="onscreen-alarm">
+        <button class="onscreen-alarm-close" onclick="dismissOnscreenAlarm()">✕</button>
+        <div class="onscreen-alarm-title">🚨 ئاگادارکردنەوەی مۆڵەت</div>
+        <div class="onscreen-alarm-text" id="onscreen-alarm-text"></div>
+    </div>
+
     <div class="authority-badge">
         <div class="main-title">🏛️ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌</div>
         <div class="sub-title">👮‍♂️ئاماده‌كردنی ڕێپێدراوی هاتووچۆ : ڕاستی محمد حیدر </div>
     </div>
     
     <div class="marquee-box">
-        <div class="marquee-content" id="marquee-text">
-            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹ڕێپێدراو : ئامانج محمد                ((بۆ هه‌رپرسیارێك ده‌ربارهه‌ی به‌شی مۆڵه‌تی هاتووچۆ هه‌ڵه‌بجه‌ په‌یوه‌ندی بكه‌ن به‌ ژماره‌ ته‌له‌فوونه‌وه‌   07501611851
+        <div class="marquee-content">
+            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹ڕێپێدراو : ئامانج محمد                ((بۆ هه‌رپرسیارێك ده‌رباره‌ی به‌شی مۆڵه‌تی هاتووچۆ هه‌ڵه‌بجه‌ په‌یوه‌ندی بكه‌ن به‌ ژماره‌ ته‌له‌فوونه‌وه‌   07501611851
         </div>
     </div>
     
@@ -514,7 +530,7 @@
 
     <div class="save-section">
         <div class="date-title">🔔  ئـــاگـــادارکــــردنەوە </div>
-        <p style="font-size: 12px; color: var(--label-color);">بەرواری مۆڵەتەکەت پاشەکەوت بکە. مۆبایلەکەت ئاگادارت ده‌كاته‌وه‌ .</p>
+        <p style="font-size: 12px; color: var(--label-color);">بەرواری مۆڵەتەکەت پاشەکەوت بکە. کاتێک کەمتر لە ٢ مانگی مابێت، مۆبایلەکەت وەک ئەلەرەم لێت دەدات و ئاگادارت ده‌كاته‌وه‌. (له‌ ئایفۆن، پێویسته‌ ئه‌په‌كه‌ به‌ Add to Home Screen زیادكرابێت تاكو نۆتفیكه‌یشن كاربكات).</p>
         <button class="btn-save" onclick="saveLicenseDate()">💾 پاشەکەوتکردنی بەروار و چالاککردنی ئەلەرەم</button>
     </div>
 
@@ -548,7 +564,6 @@
     <span id="pwa-loop-content" class="pwa-loop-text">🤖 باردەبێت...</span>
 </div>
 
-<!-- مۆداڵی دیاریکردنی ڕێکەوت -->
 <div class="modal-overlay" id="picker-modal" onclick="closeModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h3 id="modal-title">دیاریکردنی ژمارە</h3>
@@ -556,47 +571,86 @@
     </div>
 </div>
 
-<!-- مۆداڵی تایبەت بە پەیامی نۆتیفیکەیشنی ناوخۆیی (بۆ ئەو مۆبایلانەی پشتگیری سیستەمەکە ناکەن) -->
-<div class="modal-overlay" id="notification-modal">
-    <div class="notification-modal-content">
-        <h2>🚨 ئاگادارکردنەوەی هاتووچۆی هەڵەبجە</h2>
-        <div class="notification-modal-body" id="notification-modal-body"></div>
-        <button class="btn-modal-close" onclick="closeNotificationModal()">✓ تێگەیشتم</button>
-    </div>
-</div>
-
 <script>
+    // کۆدی سێرڤس وۆرکەری نوێکراوە کە بەروارەکە لە ناو تێکستی نۆتفیکەیشنەکە نیشان دەدات
     const swCode = `
         self.addEventListener('install', (e) => self.skipWaiting());
         self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
         
         self.addEventListener('message', (event) => {
             if (event.data && event.data.type === 'SCHEDULE_NOTIFICATION') {
-                const requirements = event.data.requirements;
+                const daysDiff = event.data.daysDiff;
+                const formattedDate = event.data.dateString;
+                const bodyText = event.data.customMessage ||
+                    ('🔔 مۆڵەتەکەت بەسەردەچێت لە ڕێکەوتی (' + formattedDate + ')\\nتەنها ' + daysDiff + ' ڕۆژی ماوە! تکایە سەردانی هاتووچۆ بکە بۆ نوێکردنەوە.');
+
                 self.registration.showNotification("🚨 ئاگادارکردنەوەی هاتووچۆی هەڵەبجە", {
-                    body: '🔔 شۆفێری بەڕێز کەمتر لە ٣٠ ڕۆژی ماوە مۆڵەتەکەت بەسەر بچێت، تکایە پشکنینی چاو بکە و دواتر سەردانی بەڕێوەبەرایەتی هاتووچۆ بکە و ئەو پێداویستیانە لەگەڵ خۆت بێنە کە لە خوارەوە نووسراوە:\\n\\n' + requirements,
+                    body: bodyText,
                     icon: "https://img.icons8.com/fluency/300/traffic-light.png",
                     badge: "https://img.icons8.com/fluency/300/traffic-light.png",
                     tag: 'alarm-license-expiry',
                     renotify: true,
-                    requireInteraction: true, 
-                    vibrate: [500, 200, 500, 200, 500],
+                    requireInteraction: true, // هێشتنەوەی نۆتفیکەیشن وەک ئەلەرەم لەسەر شاشە
+                    vibrate: [800,400,800,400,800,400,800,400,800,400,800,400,800], // شێوازی لەرینەوەی بەهێز وەک زەنگ
+                    silent: false,
                     data: { url: self.location.origin }
                 });
             }
+        });
+
+        self.addEventListener('notificationclick', (event) => {
+            event.notification.close();
+            event.waitUntil(
+                clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+                    if (clientList.length > 0) {
+                        return clientList[0].focus();
+                    }
+                    return clients.openWindow(event.notification.data.url || '/');
+                })
+            );
         });
     `;
     
     if ('serviceWorker' in navigator) {
         const blob = new Blob([swCode], { type: 'application/javascript' });
         const swUrl = URL.createObjectURL(blob);
-        navigator.serviceWorker.register(swUrl).catch(err => console.log('SW failed:', err));
+        navigator.serviceWorker.register(swUrl).then(reg => {
+            console.log('Advanced Alarm SW Registered.');
+        }).catch(err => console.log('SW registration failed:', err));
+    }
+
+    const manifestData = {
+        "name": "سیستەمی غەرامەی مۆڵەت - هەڵەبجە",
+        "short_name": "غەرامەی مۆڵەت",
+        "description": "ئەپی ئەژمارکردنی غەرامەی مۆڵەتی شۆفێری هاتووچۆی هەڵەبجە",
+        "start_url": window.location.href,
+        "display": "standalone",
+        "background_color": "#1a365d",
+        "theme_color": "#1a365d",
+        "orientation": "portrait-primary",
+        "icons": [
+            {
+                "src": "https://img.icons8.com/fluency/300/traffic-light.png",
+                "sizes": "300x300",
+                "type": "image/png",
+                "purpose": "any maskable"
+            }
+        ]
+    };
+    const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+    document.getElementById('pwa-manifest').setAttribute('href', URL.createObjectURL(manifestBlob));
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.getElementById('theme-btn').textContent = '☀️';
     }
 
     const systemDate = new Date(); 
     let selectedDay = systemDate.getDate();
     let selectedMonth = systemDate.getMonth() + 1; 
     let selectedYear = systemDate.getFullYear();
+
     let currentValues = { total: 0, fine: 0, duration: 0 };
 
     document.getElementById('day-btn').textContent = selectedDay;
@@ -604,6 +658,7 @@
     document.getElementById('year-btn').textContent = selectedYear;
 
     calculate(true);
+    checkNotificationOnLoad(); 
 
     function toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -620,8 +675,8 @@
     }
 
     const hints = [
-        "🤖 <b>بۆ خستنە سەر شاشە (ئەندرۆید):</b> لە سەرەوە کلیک لەسەر <b>سێ خاڵەکە ⋮</b> بکە و پاشان <b>Add to Home screen</b> لێبدە.",
-        "🍏 <b>بۆ خستنە سەر شاشە (ئایفۆن):</b> لە Safari نیشانەی <b>Share ⎋</b> لە خوارەوە دابگرە و پاشان <b>Add to Home Screen</b> هەڵبژێرە."
+        "🤖 <b>بۆ خستنە سەر شاشە لە ئەندرۆید:</b> لە سەرەوە کلیک لەسەر <b>سێ خاڵەکە ⋮</b> بکە و پاشان <b>Add to Home screen</b> هەڵبژێرە.",
+        "🍏 <b>بۆ خستنە سەر شاشە لە ئایفۆن:</b> لە Safari کلیک لەسەر نیشانەی <b>Share ⎋</b> بکە لە خوارەوە و پاشان <b>Add to Home Screen</b> هەڵبژێرە."
     ];
     let currentHintIndex = 0;
     const contentElement = document.getElementById('pwa-loop-content');
@@ -638,13 +693,18 @@
     
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     if (!isStandalone) {
-        if(contentElement) { contentElement.innerHTML = hints[0]; currentHintIndex = 1; }
+        if(contentElement) {
+            contentElement.innerHTML = hints[0];
+            currentHintIndex = 1; 
+        }
         setInterval(rotateHints, 5000); 
     } else {
         document.getElementById('pwa-loop-container').style.display = 'none';
     }
 
-    function getDaysInMonth(month, year) { return new Date(year, month, 0).getDate(); }
+    function getDaysInMonth(month, year) {
+        return new Date(year, month, 0).getDate();
+    }
 
     function openModal(type) {
         const modal = document.getElementById('picker-modal');
@@ -659,7 +719,12 @@
                 let item = document.createElement('div');
                 item.className = 'grid-item';
                 item.textContent = i;
-                item.onclick = function() { selectedDay = i; document.getElementById('day-btn').textContent = i; modal.style.display = 'none'; calculate(); };
+                item.onclick = function() {
+                    selectedDay = i;
+                    document.getElementById('day-btn').textContent = i;
+                    modal.style.display = 'none';
+                    calculate();
+                };
                 grid.appendChild(item);
             }
         } else if (type === 'month') {
@@ -668,7 +733,17 @@
                 let item = document.createElement('div');
                 item.className = 'grid-item';
                 item.textContent = i;
-                item.onclick = function() { selectedMonth = i; document.getElementById('month-btn').textContent = i; modal.style.display = 'none'; calculate(); };
+                item.onclick = function() {
+                    selectedMonth = i;
+                    document.getElementById('month-btn').textContent = i;
+                    const maxDays = getDaysInMonth(i, selectedYear);
+                    if (selectedDay > maxDays) {
+                        selectedDay = maxDays;
+                        document.getElementById('day-btn').textContent = maxDays;
+                    }
+                    modal.style.display = 'none';
+                    calculate();
+                };
                 grid.appendChild(item);
             }
         } else if (type === 'year') {
@@ -677,101 +752,275 @@
                 let item = document.createElement('div');
                 item.className = 'grid-item';
                 item.textContent = i;
-                item.onclick = function() { selectedYear = i; document.getElementById('year-btn').textContent = i; modal.style.display = 'none'; calculate(); };
+                item.onclick = function() {
+                    selectedYear = i;
+                    document.getElementById('year-btn').textContent = i;
+                    const maxDays = getDaysInMonth(selectedMonth, i);
+                    if (selectedDay > maxDays) {
+                        selectedDay = maxDays;
+                        document.getElementById('day-btn').textContent = maxDays;
+                    }
+                    modal.style.display = 'none';
+                    calculate();
+                };
                 grid.appendChild(item);
             }
         }
         modal.style.display = 'flex';
     }
 
-    function closeModal(event) { document.getElementById('picker-modal').style.display = 'none'; }
+    function closeModal(event) {
+        document.getElementById('picker-modal').style.display = 'none';
+    }
+
+    function animateValue(id, start, end, duration, isCurrency = true) {
+        let el = document.getElementById(id);
+        if(!el) return;
+        if (start === end) {
+            el.textContent = end.toLocaleString() + (isCurrency ? " دینار" : " مانگ");
+            return;
+        }
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const current = Math.floor(progress * (end - start) + start);
+            el.textContent = current.toLocaleString() + (isCurrency ? " دینار" : " مانگ");
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
 
     function calculate(skipAnimation = false) {
         const isDiscount = document.getElementById('university-toggle').checked;
+        const statusText = document.getElementById('status-text');
+        
+        if(isDiscount) {
+            statusText.textContent = "✓ داشكاندنی غەرامە (٢٠٪) چالاکە";
+            statusText.style.color = "#48bb78";
+        } else {
+            statusText.textContent = "✕ داشكاندنی غەرامە (٢٠٪) ناچالاکە";
+            statusText.style.color = "#e53e3e";
+        }
+
         const expiryDate = new Date(selectedYear, selectedMonth - 1, selectedDay);
         const currentDate = new Date(systemDate.getFullYear(), systemDate.getMonth(), systemDate.getDate());
         
-        let totalMonths = 0; let displayMonths = 0; let fine = 0; let baseFee = 60000; 
+        const date2019 = new Date(2019, 11, 3);          
+        const date2022_Start = new Date(2022, 6, 6);     
+        const date2022_M3_Start = new Date(2022, 6, 7);  
+        const date2022_M3_End = new Date(2022, 6, 17);   
+
+        let totalMonths = 0;
+        let displayMonths = 0;
+        let fine = 0;
+        let baseFee = 60000; 
 
         if (expiryDate < currentDate) {
             let yearDiff = currentDate.getFullYear() - expiryDate.getFullYear();
             let monthDiff = currentDate.getMonth() - expiryDate.getMonth();
             let dayDiff = currentDate.getDate() - expiryDate.getDate();
+
             totalMonths = (yearDiff * 12) + monthDiff;
-            if (dayDiff > 0) totalMonths += 1;
+            if (dayDiff > 0) {
+                totalMonths += 1;
+            }
             displayMonths = totalMonths;
             
-            if (expiryDate <= new Date(2019, 11, 3)) { fine = 15000; } 
-            else if (expiryDate >= new Date(2022, 6, 7) && expiryDate <= new Date(2022, 6, 17)) { fine = 20000; }
-            else if (expiryDate > new Date(2019, 11, 3) && expiryDate <= new Date(2022, 6, 6)) { fine = 30000; } 
-            else { fine = (totalMonths > 1 ? totalMonths - 1 : 0) * 5000; displayMonths = (totalMonths > 1 ? totalMonths - 1 : 0); }
+            if (expiryDate <= date2019) {
+                fine = 15000;
+            } 
+            else if (expiryDate >= date2022_M3_Start && expiryDate <= date2022_M3_End) {
+                let totalYears = currentDate.getFullYear() - expiryDate.getFullYear();
+                if (currentDate.getMonth() > expiryDate.getMonth() || 
+                   (currentDate.getMonth() === expiryDate.getMonth() && currentDate.getDate() > expiryDate.getDate())) {
+                    totalYears += 1;
+                }
+                if (totalYears === 0) totalYears = 1;
+                fine = totalYears * 20000;
+            }
+            else if (expiryDate > date2019 && expiryDate <= date2022_Start) {
+                let totalYears = currentDate.getFullYear() - expiryDate.getFullYear();
+                if (currentDate.getMonth() > expiryDate.getMonth() || 
+                   (currentDate.getMonth() === expiryDate.getMonth() && currentDate.getDate() > expiryDate.getDate())) {
+                    totalYears += 1;
+                }
+                if (totalYears === 0) totalYears = 1;
+                fine = totalYears * 30000;
+            } 
+            else {
+                const finePerMonth = 5000; 
+                let chargeableMonths = totalMonths > 1 ? totalMonths - 1 : 0;
+                fine = chargeableMonths * finePerMonth;
+                displayMonths = chargeableMonths;
+            }
         }
 
-        let finalFine = isDiscount ? fine * 0.8 : fine;
+        let finalFine = fine;
+        if (isDiscount) {
+            finalFine = fine * 0.8;
+        }
+
         let totalPrice = baseFee + finalFine;
         let targetMonths = (expiryDate < currentDate ? displayMonths : 0);
 
-        document.getElementById('duration-text').textContent = targetMonths + " مانگ";
-        document.getElementById('fine-price').textContent = finalFine.toLocaleString() + " دینار";
-        document.getElementById('total-price').textContent = totalPrice.toLocaleString() + " دینار";
+        if (skipAnimation) {
+            document.getElementById('duration-text').textContent = targetMonths + " مانگ";
+            document.getElementById('fine-price').textContent = finalFine.toLocaleString() + " دینار";
+            document.getElementById('total-price').textContent = totalPrice.toLocaleString() + " دینار";
+        } else {
+            animateValue('duration-text', currentValues.duration, targetMonths, 250, false);
+            animateValue('fine-price', currentValues.fine, finalFine, 350, true);
+            animateValue('total-price', currentValues.total, totalPrice, 400, true);
+        }
+
+        currentValues.duration = targetMonths;
+        currentValues.fine = finalFine;
+        currentValues.total = totalPrice;
+
         document.getElementById('fee-price').textContent = baseFee.toLocaleString() + " دینار";
+
+        const mainContainer = document.getElementById('main-container');
+        if (expiryDate < currentDate && finalFine > 0) {
+            document.documentElement.style.setProperty('--dynamic-status-color', '#e53e3e');
+            mainContainer.style.borderColor = 'rgba(229, 62, 62, 0.4)';
+            mainContainer.style.boxShadow = '0 10px 30px rgba(229, 62, 62, 0.15)';
+        } else {
+            document.documentElement.style.setProperty('--dynamic-status-color', '#48bb78');
+            mainContainer.style.borderColor = 'rgba(72, 187, 120, 0.4)';
+            mainContainer.style.boxShadow = '0 10px 30px rgba(72, 187, 120, 0.15)';
+        }
+    }
+
+    // ماوەی ئاگادارکردنەوە: ٢ مانگ (٦٠ ڕۆژ) پێش بەسەرچوونی مۆڵەت
+    const ALERT_THRESHOLD_DAYS = 60;
+
+    function showOnscreenAlarm(message) {
+        const banner = document.getElementById('onscreen-alarm');
+        const textEl = document.getElementById('onscreen-alarm-text');
+        if (!banner || !textEl) return;
+        if (sessionStorage.getItem('alarm_dismissed') === 'true') return;
+        textEl.textContent = message;
+        banner.classList.add('show');
+    }
+
+    function dismissOnscreenAlarm() {
+        const banner = document.getElementById('onscreen-alarm');
+        if (banner) banner.classList.remove('show');
+        sessionStorage.setItem('alarm_dismissed', 'true');
     }
 
     function saveLicenseDate() {
         const expiryDate = new Date(selectedYear, selectedMonth - 1, selectedDay);
         const currentDate = new Date(systemDate.getFullYear(), systemDate.getMonth(), systemDate.getDate());
+
+        if (expiryDate <= currentDate) {
+            alert("⚠️ ئەم بەروارە پێشتر بەسەرچووە! ناتوانرێت ئاگادارکردنەوەی بۆ دابنرێت.");
+            return;
+        }
+
+        // پاشەکەوتکردنی داتا بە جیاواز بۆ دەرهێنانی بەرواری دروست
+        localStorage.setItem('saved_license_day', selectedDay);
+        localStorage.setItem('saved_license_month', selectedMonth);
+        localStorage.setItem('saved_license_year', selectedYear);
+        localStorage.setItem('saved_license_date', expiryDate.toISOString());
+        sessionStorage.removeItem('alarm_dismissed');
+
+        if (!("Notification" in window)) {
+            // ئەم وێبگەڕە پشتگیری نۆتفیکەیشن ناکات (بۆ نموونە Safari له‌ ئایفۆن کاتێک بە Home Screen زیاد نەکراوە)
+            alert("✓ بەروار پاشەکەوت کرا. تێبینی: ئەم وێبگەڕە پشتگیری نۆتفیکەیشن ناکات، بۆیە تەنها لە ناو ئەپەکەدا ئاگادارت دەکەینەوە. لە ئایفۆن پێویستە ئەپەکە بە 'Add to Home Screen' زیادبکەیت.");
+            checkAndShowNotification(expiryDate);
+            return;
+        }
+
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                alert("✓ بەرواری مۆڵەتەکەت پاشەکەوت کرا و ئاگادارکردنەوە چالاک بوو!");
+            } else {
+                alert("✓ بەروار پاشەکەوت کرا. بەڵام مۆڵەتی نۆتفیکەیشن نەدرا، بۆیە تەنها لە ناو ئەپەکەدا ئاگادارت دەکەینەوە.");
+            }
+            checkAndShowNotification(expiryDate);
+        }).catch(() => {
+            checkAndShowNotification(expiryDate);
+        });
+    }
+
+    function checkNotificationOnLoad() {
+        const savedDate = localStorage.getItem('saved_license_date');
+        if (savedDate) {
+            checkAndShowNotification(new Date(savedDate));
+        }
+    }
+
+    function checkAndShowNotification(expiryDate) {
+        const currentDate = new Date(systemDate.getFullYear(), systemDate.getMonth(), systemDate.getDate());
         
         const timeDiff = expiryDate.getTime() - currentDate.getTime();
-        const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-        if (daysLeft <= 30) {
-            if ("Notification" in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        showSystemNotification();
-                    } else {
-                        showFallbackModal();
-                    }
-                }).catch(() => {
-                    showFallbackModal();
-                });
-            } else {
-                showFallbackModal();
+        // وەرگرتنی بەرواری فۆرماتکراو لە لۆکاڵ ستۆریج
+        const d = localStorage.getItem('saved_license_day') || selectedDay;
+        const m = localStorage.getItem('saved_license_month') || selectedMonth;
+        const y = localStorage.getItem('saved_license_year') || selectedYear;
+        const formattedDate = `${y}/${m}/${d}`;
+
+        const customMessage = `🔔 2 مانگت ماوه‌ مۆڵه‌ته‌كه‌ت به‌سه‌ر بچێت (${formattedDate})\nتکایه‌ پشکنینی چاو بکه‌ و سه‌ردانی به‌ڕێوه‌به‌رایه‌تی هاتووچۆ بکه‌ بۆ نوێکردنه‌وه‌ی مۆڵه‌ته‌كه‌ت.`;
+
+        if (daysDiff > 0 && daysDiff <= ALERT_THRESHOLD_DAYS) {
+            // 1) هەمیشە نامەکە لەسەر شاشەکە نیشان بدە، تەنانەت ئەگەر نۆتفیکەیشن کارنەکات
+            showOnscreenAlarm(customMessage);
+            if (navigator.vibrate) {
+                navigator.vibrate([800,400,800,400,800,400,800,400,800]);
             }
-        } else {
-            alert(`✓ بەروارەکە پاشەکەوت کرا.\n⏳ هێشتا ${daysLeft} ڕۆژ ماوە بۆ بەسەرچوونی مۆڵەتەکەت، بۆیە پێویست بە ئاگادارکردنەوە ناکات.`);
+
+            // 2) هەوڵدان بۆ نیشاندانی نۆتفیکەیشنی ڕاستەقینەی سیستەم
+            if (!("Notification" in window) || Notification.permission !== "granted") {
+                console.log('Notification not available/permitted; using onscreen alarm only.');
+                return;
+            }
+            if (!('serviceWorker' in navigator)) {
+                console.log('Service worker not supported.');
+                return;
+            }
+
+            navigator.serviceWorker.ready.then(registration => {
+                registration.showNotification("🚨 ئاگادارکردنەوەی هاتووچۆی هەڵەبجە", {
+                    body: customMessage,
+                    icon: "https://img.icons8.com/fluency/300/traffic-light.png",
+                    badge: "https://img.icons8.com/fluency/300/traffic-light.png",
+                    tag: 'alarm-license-expiry',
+                    renotify: true,
+                    requireInteraction: true,
+                    vibrate: [800,400,800,400,800,400,800,400,800,400,800,400,800],
+                    silent: false,
+                    data: { url: self.location ? self.location.origin : window.location.origin }
+                }).catch(err => console.log('showNotification failed:', err));
+            }).catch(err => console.log('serviceWorker.ready failed:', err));
         }
-    }
-
-    function showSystemNotification() {
-        const marqueeText = document.getElementById('marquee-text').innerText.trim();
-        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({ type: 'SCHEDULE_NOTIFICATION', requirements: marqueeText });
-        } else {
-            new Notification("🚨 ئاگادارکردنەوەی هاتووچۆی هەڵەبجە", {
-                body: `🔔 شۆفێری بەڕێز کەمتر لە ٣٠ ڕۆژی ماوە مۆڵەتەکەت بەسەر بچێت، تکایە پشکنینی چاو بکە:\n\n` + marqueeText,
-                icon: "https://img.icons8.com/fluency/300/traffic-light.png"
-            });
-        }
-    }
-
-    // پۆپئەپی ناوخۆیی ئەگەر نۆتیفیکەیشنی دەرەکی کار نەکات
-    function showFallbackModal() {
-        const marqueeText = document.getElementById('marquee-text').innerText.trim();
-        const modal = document.getElementById('notification-modal');
-        const body = document.getElementById('notification-modal-body');
-        
-        body.innerHTML = `🔔 <b>شۆفێری بەڕێز مۆڵەتەکەت کەمتر لە ٣٠ ڕۆژی ماوە یان بەسەرچووە!</b>\n\nتکایە پشکنینی چاو بکە و پاشان سەردانی بەڕێوەبەرایەتی هاتووچۆ بکە بەپێی ئەم ڕێنماییانە:\n\n${marqueeText}`;
-        modal.style.display = 'flex';
-    }
-
-    function closeNotificationModal() {
-        document.getElementById('notification-modal').style.display = 'none';
     }
 
     function copyReport() {
-        const reportText = `📊 ڕاپۆرتی ئەژمارکردنی غەرامە\n🗓️ بەروار: ${selectedYear}/${selectedMonth}/${selectedDay}\n💰 کۆی گشتی: ${document.getElementById('total-price').textContent}\n🏛️ هاتووچۆی هەڵەبجە`;
-        navigator.clipboard.writeText(reportText).then(() => alert("✓ ڕاپۆرتەکە کۆپی کرا!"));
+        const expiryStr = `${selectedYear}/${selectedMonth}/${selectedDay}`;
+        const durationStr = document.getElementById('duration-text').textContent;
+        const fineStr = document.getElementById('fine-price').textContent;
+        const feeStr = document.getElementById('fee-price').textContent;
+        const totalStr = document.getElementById('total-price').textContent;
+        
+        const reportText = `📊 ڕاپۆرتی ئەژمارکردنی غەرامە
+🗓️ بەرواری بەسەرچوون: ${expiryStr}
+⏳ ماوەی بەسەرچوون: ${durationStr}
+🔴 بڕی غەرامە: ${fineStr}
+🔵 ڕسوومات: ${feeStr}
+💰 کۆی گشتی بۆ پارەدان: ${totalStr}
+🏛️ بەڕێوەبەرایەتی هاتووچۆی پارێزگای هەڵەبجە`;
+
+        navigator.clipboard.writeText(reportText).then(() => {
+            alert("✓ ڕاپۆرتەکە کۆپی کرا!");
+        }).catch(() => {
+            alert("✕ کێشەیەک لە کۆپیکردن کورت لێکەوتەوە.");
+        });
     }
 </script>
 </body>
