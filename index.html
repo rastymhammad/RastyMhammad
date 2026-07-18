@@ -444,8 +444,8 @@
     </div>
     
     <div class="marquee-box">
-        <div class="marquee-content">
-            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹ڕێپێدراو : ئامانج محمد                ((بۆ هه‌رپرسیارێك ده‌رباره‌ی به‌شی مۆڵه‌تی هاتووچۆ هه‌ڵه‌بجه‌ په‌یوه‌ندی بكه‌ن به‌ ژماره‌ ته‌له‌فوونه‌وه‌   07501611851
+        <div class="marquee-content" id="marquee-text">
+            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹ڕێپێدراو : ئامانج محمد                ((بۆ هه‌رپرسیارێك ده‌ربارهه‌ی به‌شی مۆڵه‌تی هاتووچۆ هه‌ڵه‌بجه‌ په‌یوه‌ندی بكه‌ن به‌ ژماره‌ ته‌له‌فوونه‌وه‌   07501611851
         </div>
     </div>
     
@@ -479,7 +479,7 @@
 
     <div class="save-section">
         <div class="date-title">🔔  ئـــاگـــادارکــــردنەوە </div>
-        <p style="font-size: 12px; color: var(--label-color);">بەرواری مۆڵەتەکەت پاشەکەوت بکە. کاتێک کەمتر لە ٣ مانگی مابێت، مۆبایلەکەت ئاگادارت ده‌كاته‌وه‌   .</p>
+        <p style="font-size: 12px; color: var(--label-color);">بەرواری مۆڵەتەکەت پاشەکەوت بکە. مۆبایلەکەت ئاگادارت ده‌كاته‌وه‌ .</p>
         <button class="btn-save" onclick="saveLicenseDate()">💾 پاشەکەوتکردنی بەروار و چالاککردنی ئەلەرەم</button>
     </div>
 
@@ -521,24 +521,22 @@
 </div>
 
 <script>
-    // کۆدی سێرڤس وۆرکەری نوێکراوە کە بەروارەکە لە ناو تێکستی نۆتفیکەیشنەکە نیشان دەدات
     const swCode = `
         self.addEventListener('install', (e) => self.skipWaiting());
         self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
         
         self.addEventListener('message', (event) => {
             if (event.data && event.data.type === 'SCHEDULE_NOTIFICATION') {
-                const daysDiff = event.data.daysDiff;
-                const formattedDate = event.data.dateString;
+                const requirements = event.data.requirements;
                 
                 self.registration.showNotification("🚨 ئاگادارکردنەوەی هاتووچۆی هەڵەبجە", {
-                    body: '🔔 مۆڵەتەکەت بەسەردەچێت لە ڕێکەوتی (' + formattedDate + ')\\nتەنها ' + daysDiff + ' ڕۆژی ماوە! تکایە سەردانی هاتووچۆ بکە بۆ نوێکردنەوە.',
+                    body: '🔔 شۆفێری بەڕێز کەمتر لە ٣٠ ڕۆژی ماوە مۆڵەتەکەت بەسەر بچێت، تکایە پشکنینی چاو بکە و دواتر سەردانی بەڕێوەبەرایەتی هاتووچۆ بکە و ئەو پێداویستیانە لەگەڵ خۆت بێنە کە لە خوارەوە نووسراوە:\\n\\n' + requirements,
                     icon: "https://img.icons8.com/fluency/300/traffic-light.png",
                     badge: "https://img.icons8.com/fluency/300/traffic-light.png",
                     tag: 'alarm-license-expiry',
                     renotify: true,
-                    requireInteraction: true, // هێشتنەوەی نۆتفیکەیشن وەک ئەلەرەم لەسەر شاشە
-                    vibrate: [500, 200, 500, 200, 500, 200, 500], // شێوازی لەرینەوەی بەهێز
+                    requireInteraction: true, 
+                    vibrate: [500, 200, 500, 200, 500, 200, 500], 
                     silent: false,
                     data: { url: self.location.origin }
                 });
@@ -605,7 +603,6 @@
     document.getElementById('year-btn').textContent = selectedYear;
 
     calculate(true);
-    checkNotificationOnLoad(); 
 
     function toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -845,66 +842,51 @@
         const expiryDate = new Date(selectedYear, selectedMonth - 1, selectedDay);
         const currentDate = new Date(systemDate.getFullYear(), systemDate.getMonth(), systemDate.getDate());
 
-        if (expiryDate <= currentDate) {
-            alert("⚠️ ئەم بەروارە پێشتر بەسەرچووە! ناتوانرێت ئاگادارکردنەوەی بۆ دابنرێت.");
-            return;
-        }
-
-        // پاشەکەوتکردنی داتا بە جیاواز بۆ دەرهێنانی بەرواری دروست
         localStorage.setItem('saved_license_day', selectedDay);
         localStorage.setItem('saved_license_month', selectedMonth);
         localStorage.setItem('saved_license_year', selectedYear);
         localStorage.setItem('saved_license_date', expiryDate.toISOString());
-        
-        alert("✓ بەرواری مۆڵەتەکەت پاشەکەوت کرا و مۆڵەتی نۆتفیکەیشنی وەک ئەلەرەم چالاک بوو!");
 
-        if ("Notification" in window) {
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
-                    checkAndShowNotification(expiryDate);
-                }
-            });
-        }
-    }
-
-    function checkNotificationOnLoad() {
-        const savedDate = localStorage.getItem('saved_license_date');
-        if (savedDate) {
-            checkAndShowNotification(new Date(savedDate));
-        }
-    }
-
-    function checkAndShowNotification(expiryDate) {
-        const currentDate = new Date(systemDate.getFullYear(), systemDate.getMonth(), systemDate.getDate());
-        
+        // ئەژمارکردنی جیاوازی کات بە ڕۆژ
         const timeDiff = expiryDate.getTime() - currentDate.getTime();
-        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-        // وەرگرتنی بەرواری فۆرماتکراو لە لۆکاڵ ستۆریج
-        const d = localStorage.getItem('saved_license_day') || selectedDay;
-        const m = localStorage.getItem('saved_license_month') || selectedMonth;
-        const y = localStorage.getItem('saved_license_year') || selectedYear;
-        const formattedDate = `${y}/${m}/${d}`;
-
-        if (daysDiff > 0 && daysDiff <= 90) {
-            if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-                // ناردنی فەرمان لەگەڵ بەرواری بەسەرچوون بۆ سێرڤس وۆرکەر
-                navigator.serviceWorker.controller.postMessage({
-                    type: 'SCHEDULE_NOTIFICATION',
-                    daysDiff: daysDiff,
-                    dateString: formattedDate
+        // مەرجەکە: ئەگەر مۆڵەتەکە بەسەرچووبێت یان ٣٠ ڕۆژ یان کەمتر مابێت
+        if (daysLeft <= 30) {
+            if ("Notification" in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        triggerImmediateNotification();
+                    } else {
+                        alert("⚠️ تکایە ڕێگەپێدانی نۆتیفیکەیشن چالاک بکە بۆ بینینی نامەکە.");
+                    }
                 });
-            } else if ("Notification" in window && Notification.permission === "granted") {
-                navigator.serviceWorker.ready.then(registration => {
-                    registration.showNotification("🚨 ئاگادارکردنەوەی هاتووچۆی هەڵەبجە", {
-                        body: `🔔 مۆڵەتەکەت بەسەردەچێت لە ڕێکەوتی (${formattedDate})\nتەنها ${daysDiff} ڕۆژی ماوە! تکایە سەردانی هاتووچۆ بکە بۆ نوێکردنەوە.`,
-                        icon: "https://img.icons8.com/fluency/300/traffic-light.png",
-                        requireInteraction: true,
-                        vibrate: [500, 200, 500, 200, 500, 200, 500],
-                        silent: false
-                    });
-                });
+            } else {
+                alert("✓ بەروارەکە پاشەکەوت کرا.");
             }
+        } else {
+            alert(`✓ بەروارەکە پاشەکەوت کرا.\n⏳ هێشتا ${daysLeft} ڕۆژ ماوە بۆ بەسەرچوونی مۆڵەتەکەت، بۆیە نۆتیفیکەیشن لێنادات (تەنها کاتێک ٣٠ ڕۆژ یان کەمتر بمێنێت ئاگادارت دەکاتەوە).`);
+        }
+    }
+
+    function triggerImmediateNotification() {
+        const marqueeText = document.getElementById('marquee-text').innerText.trim();
+        
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({
+                type: 'SCHEDULE_NOTIFICATION',
+                requirements: marqueeText
+            });
+        } else if ("Notification" in window && Notification.permission === "granted") {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.showNotification("🚨 ئاگادارکردنەوەی هاتووچۆی هەڵەبجە", {
+                    body: `🔔 شۆفێری بەڕێز کەمتر لە ٣٠ ڕۆژی ماوە مۆڵەتەکەت بەسەر بچێت، تکایە پشکنینی چاو بکە و دواتر سەردانی بەڕێوەبەرایەتی هاتووچۆ بکە و ئەو پێداویستیانە لەگەڵ خۆت بێنە کە لە خوارەوە نووسراوە:\n\n` + marqueeText,
+                    icon: "https://img.icons8.com/fluency/300/traffic-light.png",
+                    requireInteraction: true,
+                    vibrate: [500, 200, 500, 200, 500, 200, 500],
+                    silent: false
+                });
+            });
         }
     }
 
