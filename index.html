@@ -517,7 +517,7 @@
     </div>
     
     <div id="visitor-counter" style="text-align:center; font-size:11.5px; color:var(--info-text); margin-bottom:12px;">
-        👁️ سەردانیکردنی ئەمڕۆ: <b id="visitor-count-text">...</b>
+        👁️  ژمــاره‌ی به‌ كارهێنه‌ر: <b id="visitor-count-text">...</b>
     </div>
 
     <div class="header">🚗  غه‌رامه‌ی مۆڵه‌تی شۆفێری 🚗</div>
@@ -662,12 +662,17 @@
     function updateVisitorCounter() {
         const el = document.getElementById('visitor-count-text');
         if (!el) return;
-        const dateKey = new Date().toISOString().slice(0, 10); // ڕۆژی ئەمڕۆ
+
+        // ئەم بەرواره‌ی خواره‌وه به‌ده‌ست دروست بكه‌، هه‌رکاتێک ئه‌په‌که‌ت ئه‌پدەیت کرد
+        // ژماره‌ی سه‌ردانه‌کان له‌ نوێ ده‌ست پێده‌کاته‌وه‌. ئه‌گینا هیچ کات به‌خۆیی
+        // سفر نابێته‌وه‌ (نه‌ ڕۆژانه‌ و نه‌ خۆکارانه‌).
+        const updateKey = '2026-07-19'; // بەرواری دواین ئەپدەیت (YYYY-MM-DD)
+
         const namespace = 'traffic-halabja-app';
-        const countedFlag = 'counted_' + dateKey;
+        const countedFlag = 'counted_' + updateKey;
         const alreadyCounted = sessionStorage.getItem(countedFlag);
         const endpoint = alreadyCounted ? 'get' : 'hit';
-        const url = `https://abacus.jasoncameron.dev/${endpoint}/${namespace}/${dateKey}`;
+        const url = `https://abacus.jasoncameron.dev/${endpoint}/${namespace}/${updateKey}`;
 
         fetch(url)
             .then(res => res.json())
