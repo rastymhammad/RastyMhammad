@@ -194,13 +194,13 @@
         }
         
        @keyframes scroll-rtl {
-    from {
-        transform: translateX(-20%);
-    }
-    to {
-        transform: translateX(100%);
-    }
-}
+            from {
+                transform: translateX(-20%);
+            }
+            to {
+                transform: translateX(100%);
+            }
+        }
 
         .header {
             text-align: center;
@@ -303,8 +303,8 @@
             background: var(--modal-bg);
             padding: 20px;
             border-radius: 16px;
-            width: 90%;
-            max-width: 340px;
+            width: 95%;
+            max-width: 380px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             text-align: center;
             animation: fadeIn 0.2s ease-out;
@@ -316,9 +316,9 @@
         }
         .number-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 8px;
-            max-height: 260px;
+            max-height: 85vh;
             overflow-y: auto;
             padding: 5px;
         }
@@ -338,6 +338,13 @@
         .grid-item:hover {
             background: #4299e1;
             color: white;
+        }
+        /* ستایلی هەڵبژێردراو بۆ ڕەنگکردنی خانەی هەڵبژێردراو */
+        .grid-item.selected-item {
+            background: #3182ce !important;
+            color: white !important;
+            box-shadow: 0 2px 8px rgba(49, 130, 206, 0.4);
+            border: 2px solid #63b3ed;
         }
         
         @keyframes fadeIn {
@@ -748,6 +755,9 @@
             for (let i = 1; i <= daysCount; i++) {
                 let item = document.createElement('div');
                 item.className = 'grid-item';
+                if (i === selectedDay) {
+                    item.classList.add('selected-item'); // ئەگەر هەمان ڕۆژ بێت ڕەنگدار دەبێت
+                }
                 item.textContent = i;
                 item.onclick = function() {
                     vibrate();
@@ -764,6 +774,9 @@
             for (let i = 1; i <= 12; i++) {
                 let item = document.createElement('div');
                 item.className = 'grid-item';
+                if (i === selectedMonth) {
+                    item.classList.add('selected-item'); // ئەگەر هەمان مانگ بێت ڕەنگدار دەبێت
+                }
                 item.textContent = i;
                 item.onclick = function() {
                     vibrate();
@@ -785,6 +798,9 @@
             for (let i = 2015; i <= 2035; i++) {
                 let item = document.createElement('div');
                 item.className = 'grid-item';
+                if (i === selectedYear) {
+                    item.classList.add('selected-item'); // ئەگەر هەمان ساڵ بێت ڕەنگدار دەبێت
+                }
                 item.textContent = i;
                 item.onclick = function() {
                     vibrate();
