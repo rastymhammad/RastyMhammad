@@ -194,12 +194,8 @@
         }
         
        @keyframes scroll-rtl {
-            from {
-                transform: translateX(-20%);
-            }
-            to {
-                transform: translateX(100%);
-            }
+            from { transform: translateX(-20%); }
+            to { transform: translateX(100%); }
         }
 
         .header {
@@ -207,7 +203,7 @@
             font-size: 18px;
             font-weight: bold;
             color: var(--header-text);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background: var(--header-bg);
             padding: 12px;
             border-radius: 12px;
@@ -219,7 +215,7 @@
             background: var(--toggle-bg);
             padding: 12px;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             border: 1px solid var(--toggle-border);
         }
         .switch {
@@ -253,15 +249,31 @@
             border: 1px solid var(--date-border);
             border-radius: 12px;
             padding: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+        }
+        .date-title-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
         }
         .date-title {
-            text-align: center;
             color: var(--date-title);
             font-weight: bold;
-            margin-bottom: 12px;
             font-size: 14.5px;
         }
+        .btn-reset {
+            background: transparent;
+            border: 1px solid var(--date-border);
+            color: var(--date-title);
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-size: 11.5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-reset:active { transform: scale(0.95); }
+
         .date-inputs {
             display: flex;
             gap: 10px;
@@ -288,7 +300,35 @@
             background: var(--input-bg);
             cursor: pointer;
         }
-        .date-custom-input:hover { border-color: #cbd5e0; }
+
+        .checklist-box {
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+        }
+        .checklist-title {
+            font-size: 12.5px;
+            font-weight: bold;
+            color: var(--header-text);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .checklist-items {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            font-size: 11.5px;
+            color: var(--label-color);
+        }
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
         .modal-overlay {
             display: none;
@@ -335,21 +375,11 @@
             cursor: pointer;
             user-select: none;
         }
-        .grid-item:hover {
-            background: #4299e1;
-            color: white;
-        }
-        /* ستایلی هەڵبژێردراو بۆ ڕەنگکردنی خانەی هەڵبژێردراو */
         .grid-item.selected-item {
             background: #3182ce !important;
             color: white !important;
             box-shadow: 0 2px 8px rgba(49, 130, 206, 0.4);
             border: 2px solid #63b3ed;
-        }
-        
-        @keyframes fadeIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
         }
 
         .results {
@@ -417,30 +447,8 @@
             gap: 4px;
             text-align: center;
         }
-        .btn-secondary:active { transform: scale(0.97); }
 
-        .future-section {
-            background: var(--toggle-bg);
-            border: 1px solid var(--toggle-border);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .future-slider {
-            width: 100%;
-            margin-top: 8px;
-            accent-color: #dd6b20;
-        }
-        .future-result {
-            text-align: center;
-            font-size: 13px;
-            color: var(--label-color);
-            margin-top: 8px;
-        }
-
-        .faq-section {
-            margin-top: 12px;
-        }
+        .faq-section { margin-top: 12px; }
         .faq-section summary {
             cursor: pointer;
             font-weight: bold;
@@ -453,12 +461,8 @@
             list-style: none;
         }
         .faq-section summary::-webkit-details-marker { display: none; }
-        .faq-section summary::before {
-            content: '❓ ';
-        }
-        .faq-section details[open] summary {
-            border-radius: 8px 8px 0 0;
-        }
+        .faq-section summary::before { content: '❓ '; }
+        .faq-section details[open] summary { border-radius: 8px 8px 0 0; }
         .faq-section .faq-answer {
             font-size: 12px;
             color: var(--info-text);
@@ -497,13 +501,11 @@
             text-align: right;
             font-size: 13.5px;
             line-height: 1.6;
-            transition: all 0.3s ease-in-out;
             border: 1px solid #ecc94b;
         }
         .pwa-loop-text {
             display: block;
             min-height: 45px;
-            transition: opacity 0.3s ease-in-out;
         }
     </style>
 </head>
@@ -514,15 +516,16 @@
 
     <div class="authority-badge">
         <div class="main-title">🏛️ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌</div>
-        <div class="sub-title">👮‍♂️ئاماده‌كردنی ڕێپێدراوی هاتووچۆ : ڕاستی محمد حیدر </div>
+        <div class="sub-title">👮‍♂️ ئاماده‌كردنی ڕێپێدراوی هاتووچۆ : ڕاستی محمد حیدر </div>
     </div>
     
     <div class="marquee-box">
         <div class="marquee-content">
-            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹ڕێپێدراو : ئامانج محمد                ((بۆ هه‌رپرسیارێك ده‌رباره‌ی به‌شی مۆڵه‌تی هاتووچۆ هه‌ڵه‌بجه‌ په‌یوه‌ندی بكه‌ن به‌ ژماره‌ ته‌له‌فوونه‌وه‌   <a href="tel:07501611851" style="color: inherit; text-decoration: underline;">07501611851</a>
+            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹 ڕێپێدراو : ئامانج محمد                ((بۆ هه‌رپرسیارێك ده‌رباره‌ی به‌شی مۆڵه‌تی هاتووچۆ هه‌ڵه‌بجه‌ په‌یوه‌ندی بكه‌ن به‌ ژماره‌ ته‌له‌فوونه‌وه‌   <a href="tel:07501611851" style="color: inherit; text-decoration: underline; direction: ltr; display: inline-block;">07501611851</a>
         </div>
     </div>
     
+    <!-- بەشی بەکارهێنەران -->
     <div id="visitor-counter" style="text-align:center; font-size:11.5px; color:var(--info-text); margin-bottom:12px;">
         👁️  ژمــاره‌ی به‌ كارهێنه‌ر: <b id="visitor-count-text">...</b>
     </div>
@@ -538,7 +541,10 @@
     </div>
 
     <div class="date-section">
-        <div class="date-title">📅 ڕێکەوتی بەسەرچوونی مۆڵەت:</div>
+        <div class="date-title-wrap">
+            <div class="date-title">📅 ڕێکەوتی بەسەرچوونی مۆڵەت:</div>
+            <button class="btn-reset" onclick="resetToToday()">🔄 ئەمڕۆ</button>
+        </div>
         <div class="date-inputs">
             <div class="date-box">
                 <label>ڕۆژ</label>
@@ -555,12 +561,13 @@
         </div>
     </div>
 
-    <div class="future-section">
-        <div class="date-title" style="color:var(--label-color); font-size:13px;">🔮 ئه‌گه‌ر دواخه‌یت، غه‌رامه‌كه‌ت چه‌ندی لێدێت؟</div>
-        <input type="range" class="future-slider" id="future-slider" min="0" max="12" value="0" step="1" oninput="updateFuture()">
-        <div class="future-result">
-            دوای <b id="future-months" style="color:var(--date-title);">0</b> مانگی تر لە ئێستاوه‌، کۆی گشتی دەبێتە
-            <b id="future-total" style="color:var(--fine-color);">0 دینار</b>
+    <div class="checklist-box">
+        <div class="checklist-title">📄 پێداویستییەکان بۆ نوێکردنەوەی مۆڵەت:</div>
+        <div class="checklist-items">
+            <div class="check-item">✅ كارتی نیشتیمانی</div>
+            <div class="check-item">✅ كارتی زانیاری</div>
+            <div class="check-item">✅ پاسپۆرت (ئەگەر هەبێت)</div>
+            <div class="check-item">✅ پشكنینی چاو</div>
         </div>
     </div>
 
@@ -597,7 +604,7 @@
     <button class="btn-copy" id="copy-btn" onclick="copyReport()">📋 کۆپیکردنی ڕاپۆرتی غەرامە</button>
 
     <div class="secondary-actions">
-        <a class="btn-secondary" href="https://www.google.com/maps/search/?api=1&query=%D8%A8%D9%87%E2%80%8C%DA%95%DB%8E%D9%88%D9%87%E2%80%8C%D8%A8%D9%87%E2%80%8C%D8%B1%D8%A7%DB%8C%D9%87%E2%80%8C%D8%AA%DB%8C%20%D9%87%D8%A7%D8%AA%D9%88%D9%88%DA%86%DB%86%DB%8C%20%D9%BE%D8%A7%D8%B1%DB%8E%D8%B2%DA%AF%D8%A7%DB%8C%20%D9%87%D9%87%E2%80%8C%DA%B5%D9%87%E2%80%8C%D8%A8%D8%AC%D9%87%E2%80%8C" target="_blank" rel="noopener" style="flex:1; text-decoration:none;" onclick="vibrate()">📍  لۆكه‌یشنی به‌ڕێوه‌به‌رایه‌تی هاتووچۆی هه‌ڵه‌بجه‌</a>
+        <a class="btn-secondary" href="https://www.google.com/maps/search/?api=1&query=%D8%A8%D9%87%E2%80%8C%DA%95%DB%8E%D9%88%D9%87%E2%80%8C%D8%A8%D9%87%E2%80%8C%D8%B1%D8%A7%DB%8E%D9%88%D9%87%E2%80%8C%D8%AA%DB%8C%20%D9%87%D8%A7%D8%AA%D9%88%D9%88%DA%86%DB%86%DB%8C%20%D9%BE%D8%A7%D8%B1%DB%8E%D8%B2%DA%AF%D8%A7%DB%8C%20%D9%87%D9%87%E2%80%8C%DA%B5%D9%87%E2%80%8C%D8%A8%D8%AC%D9%87%E2%80%8C" target="_blank" rel="noopener" style="flex:1; text-decoration:none;" onclick="vibrate()">📍  لۆكه‌یشنی به‌ڕێوه‌به‌رایه‌تی هاتووچۆی هه‌ڵه‌بجه‌</a>
     </div>
 
     <div class="info-text">
@@ -633,14 +640,12 @@
         "background_color": "#1a365d",
         "theme_color": "#1a365d",
         "orientation": "portrait-primary",
-        "icons": [
-            {
-                "src": "https://img.icons8.com/fluency/300/traffic-light.png",
-                "sizes": "300x300",
-                "type": "image/png",
-                "purpose": "any maskable"
-            }
-        ]
+        "icons": [{
+            "src": "https://img.icons8.com/fluency/300/traffic-light.png",
+            "sizes": "300x300",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }]
     };
     const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
     document.getElementById('pwa-manifest').setAttribute('href', URL.createObjectURL(manifestBlob));
@@ -666,12 +671,26 @@
     calculate(true);
     document.getElementById('results-box').style.opacity = '1';
 
+    function resetToToday() {
+        vibrate();
+        const now = new Date();
+        selectedDay = now.getDate();
+        selectedMonth = now.getMonth() + 1;
+        selectedYear = now.getFullYear();
+        
+        document.getElementById('day-btn').textContent = selectedDay;
+        document.getElementById('month-btn').textContent = selectedMonth;
+        document.getElementById('year-btn').textContent = selectedYear;
+        userSetDate = false;
+        calculate();
+    }
+
     function updateVisitorCounter() {
         const el = document.getElementById('visitor-count-text');
         if (!el) return;
-
-        const updateKey = '2026-07-19'; 
-
+        
+        const BASE_COUNT = 9000; // ژمارەی بنەڕەتی (لەمەوە بەرەو سەرەوە دەڕوات)
+        const updateKey = '2026-08-05'; 
         const namespace = 'traffic-halabja-app';
         const countedFlag = 'counted_' + updateKey;
         const alreadyCounted = sessionStorage.getItem(countedFlag);
@@ -682,18 +701,17 @@
             .then(res => res.json())
             .then(data => {
                 if (!alreadyCounted) sessionStorage.setItem(countedFlag, '1');
-                el.textContent = data.value.toLocaleString();
+                const totalVisitors = BASE_COUNT + (data.value || 0);
+                el.textContent = totalVisitors.toLocaleString();
             })
-            .catch(() => {
-                el.textContent = '—';
+            .catch(() => { 
+                el.textContent = BASE_COUNT.toLocaleString(); 
             });
     }
     updateVisitorCounter();
 
     function vibrate(ms = 15) {
-        if (navigator.vibrate) {
-            navigator.vibrate(ms);
-        }
+        if (navigator.vibrate) navigator.vibrate(ms);
     }
 
     function toggleTheme() {
@@ -755,9 +773,7 @@
             for (let i = 1; i <= daysCount; i++) {
                 let item = document.createElement('div');
                 item.className = 'grid-item';
-                if (i === selectedDay) {
-                    item.classList.add('selected-item'); // ئەگەر هەمان ڕۆژ بێت ڕەنگدار دەبێت
-                }
+                if (i === selectedDay) item.classList.add('selected-item');
                 item.textContent = i;
                 item.onclick = function() {
                     vibrate();
@@ -774,9 +790,7 @@
             for (let i = 1; i <= 12; i++) {
                 let item = document.createElement('div');
                 item.className = 'grid-item';
-                if (i === selectedMonth) {
-                    item.classList.add('selected-item'); // ئەگەر هەمان مانگ بێت ڕەنگدار دەبێت
-                }
+                if (i === selectedMonth) item.classList.add('selected-item');
                 item.textContent = i;
                 item.onclick = function() {
                     vibrate();
@@ -798,9 +812,7 @@
             for (let i = 2015; i <= 2035; i++) {
                 let item = document.createElement('div');
                 item.className = 'grid-item';
-                if (i === selectedYear) {
-                    item.classList.add('selected-item'); // ئەگەر هەمان ساڵ بێت ڕەنگدار دەبێت
-                }
+                if (i === selectedYear) item.classList.add('selected-item');
                 item.textContent = i;
                 item.onclick = function() {
                     vibrate();
@@ -838,9 +850,7 @@
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
             const current = Math.floor(progress * (end - start) + start);
             el.textContent = current.toLocaleString() + (isCurrency ? " دینار" : " مانگ");
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
+            if (progress < 1) window.requestAnimationFrame(step);
         };
         window.requestAnimationFrame(step);
     }
@@ -870,8 +880,7 @@
             if (expiryDate <= date2019) {
                 fine = 15000;
                 period = 'before2019';
-            }
-            else if (expiryDate >= date2022_M3_Start && expiryDate <= date2022_M3_End) {
+            } else if (expiryDate >= date2022_M3_Start && expiryDate <= date2022_M3_End) {
                 let totalYears = asOfDate.getFullYear() - expiryDate.getFullYear();
                 if (asOfDate.getMonth() > expiryDate.getMonth() ||
                    (asOfDate.getMonth() === expiryDate.getMonth() && asOfDate.getDate() > expiryDate.getDate())) {
@@ -881,8 +890,7 @@
                 fine = totalYears * 20000;
                 period = 'm3window';
                 years = totalYears;
-            }
-            else if (expiryDate > date2019 && expiryDate <= date2022_Start) {
+            } else if (expiryDate > date2019 && expiryDate <= date2022_Start) {
                 let totalYears = asOfDate.getFullYear() - expiryDate.getFullYear();
                 if (asOfDate.getMonth() > expiryDate.getMonth() ||
                    (asOfDate.getMonth() === expiryDate.getMonth() && asOfDate.getDate() > expiryDate.getDate())) {
@@ -892,8 +900,7 @@
                 fine = totalYears * 30000;
                 period = '2019to2022';
                 years = totalYears;
-            }
-            else {
+            } else {
                 const finePerMonth = 5000;
                 let chargeableMonths = totalMonths > 1 ? totalMonths - 1 : 0;
                 fine = chargeableMonths * finePerMonth;
@@ -960,7 +967,6 @@
             okMessage.style.display = (userSetDate ? 'block' : 'none');
         }
 
-        updateFuture();
         updateBreakdown(expiryDate, currentDate, result);
     }
 
@@ -1015,22 +1021,6 @@
         label.textContent = isOpen ? 'بزانە چۆن ئەم ژمارەیە هاتووە' : 'شاردنەوەی وردەکاری';
     }
 
-    function updateFuture() {
-        const slider = document.getElementById('future-slider');
-        if (!slider) return;
-        const monthsAhead = parseInt(slider.value, 10);
-        document.getElementById('future-months').textContent = monthsAhead;
-
-        const isDiscount = document.getElementById('university-toggle').checked;
-        const expiryDate = new Date(selectedYear, selectedMonth - 1, selectedDay);
-        const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        const futureDate = new Date(currentDate);
-        futureDate.setMonth(futureDate.getMonth() + monthsAhead);
-
-        const result = computeFine(expiryDate, futureDate, isDiscount);
-        document.getElementById('future-total').textContent = result.total.toLocaleString() + " دینار";
-    }
-
     function copyReport() {
         const expiryStr = `${selectedYear}/${selectedMonth}/${selectedDay}`;
         const durationStr = document.getElementById('duration-text').textContent;
@@ -1074,7 +1064,7 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             const swCode = `
-                const CACHE_NAME = 'traffic-halabja-v2';
+                const CACHE_NAME = 'traffic-halabja-v5';
                 const ASSETS = [
                     '${window.location.pathname}',
                     'https://img.icons8.com/fluency/300/traffic-light.png',
