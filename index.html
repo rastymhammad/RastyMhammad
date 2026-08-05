@@ -608,7 +608,7 @@
     </div>
 
     <div class="info-text">
-        ℹ️ <b>یاساکانی مۆڵەت:</b> ڕسووماتی جێگیر ٦٠,٠٠٠ دینارە. غەرامەکان بە چوار قۆناغ ئەژمار دەکرێن (پێش 3.12.2019 جێگیرە بە ١٥ هەزار، لە نێوان 4.12.2019 بۆ 6.7.2022 ساڵانەیە بە ٣٠ هەزار، لە نێوان 7.7.2022 بۆ 17.7.2022 ساڵانەیە بە ٢٠ هەزار، و لە 18.7.2022 بەدواوە مانگانەیە بە ٥ هەزار دینار بە لێخۆشبوونی یەک مانگ لە ئەژمارکردنی ماوە و غەرامە).
+        ℹ️ <b>یاساکانی مۆڵەت:</b> ڕسووماتی جێگیر ٦٠,٠٠٠ دینارە. غەرامەکان بە چوار قۆناغ ئەژمار دەکرێن (پێش 3.12.2019 جێگیرە بە ١٥ هەزار، لە نێوان 4.12.2019 بۆ 6.7.2022 ساڵانەیە بە ٣٠ هەزار، لە نێوان 7.7.2022 بۆ 17.7.2022 جێگیرە بە ٢٠ هەزار، و لە 18.7.2022 بەدواوە مانگانەیە بە ٥ هەزار دینار بە لێخۆشبوونی یەک مانگ لە ئەژمارکردنی ماوە و غەرامە).
     </div>
 
     <div class="faq-section">
@@ -689,7 +689,7 @@
         const el = document.getElementById('visitor-count-text');
         if (!el) return;
         
-        const BASE_COUNT = 9000; // ژمارەی بنەڕەتی (لەمەوە بەرەو سەرەوە دەڕوات)
+        const BASE_COUNT = 9000; 
         const updateKey = '2026-08-05'; 
         const namespace = 'traffic-halabja-app';
         const countedFlag = 'counted_' + updateKey;
@@ -881,15 +881,9 @@
                 fine = 15000;
                 period = 'before2019';
             } else if (expiryDate >= date2022_M3_Start && expiryDate <= date2022_M3_End) {
-                let totalYears = asOfDate.getFullYear() - expiryDate.getFullYear();
-                if (asOfDate.getMonth() > expiryDate.getMonth() ||
-                   (asOfDate.getMonth() === expiryDate.getMonth() && asOfDate.getDate() > expiryDate.getDate())) {
-                    totalYears += 1;
-                }
-                if (totalYears === 0) totalYears = 1;
-                fine = totalYears * 20000;
+                // تەنها ۲۰ هەزاری جێگیر بۆ ئەم ۱۰ ڕۆژە
+                fine = 20000;
                 period = 'm3window';
-                years = totalYears;
             } else if (expiryDate > date2019 && expiryDate <= date2022_Start) {
                 let totalYears = asOfDate.getFullYear() - expiryDate.getFullYear();
                 if (asOfDate.getMonth() > expiryDate.getMonth() ||
@@ -993,7 +987,7 @@
             ruleLine = `لەم قۆناغەدا غەرامەکە ساڵانەیە بە ٣٠,٠٠٠ دینار: <b>${result.years} ساڵ × ٣٠,٠٠٠ = ${(result.years * 30000).toLocaleString()} دینار</b>`;
         } else if (result.period === 'm3window') {
             periodLabel = 'لە نێوان ٧/٧/٢٠٢٢ بۆ ١٧/٧/٢٠٢٢';
-            ruleLine = `لەم قۆناغەدا غەرامەکە ساڵانەیە بە ٢٠,٠٠٠ دینار: <b>${result.years} ساڵ × ٢٠,٠٠٠ = ${(result.years * 20000).toLocaleString()} دینار</b>`;
+            ruleLine = `لەم قۆناغەدا غەرامەکە جێگیرە و بە ساڵ حساب ناکرێت: <b>٢٠,٠٠٠ دینار</b>`;
         } else if (result.period === 'after2022') {
             periodLabel = 'لە ١٨/٧/٢٠٢٢ بەدواوە';
             const chargeableMonths = result.months;
