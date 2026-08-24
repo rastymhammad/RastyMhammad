@@ -382,6 +382,7 @@
             border: 2px solid #63b3ed;
         }
 
+        /* بەشی ئەنجامەکان و گێچەکەی ناوی */
         .results {
             background: var(--results-bg);
             border-radius: 12px;
@@ -389,6 +390,9 @@
             border: 2px solid var(--dynamic-status-color);
             margin-bottom: 15px;
             transition: opacity 0.35s ease-in-out, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative; 
+            overflow: hidden; 
+            z-index: 1;
         }
         .result-row {
             display: flex;
@@ -397,6 +401,8 @@
             border-bottom: 1px dashed var(--results-border);
             font-size: 15px;
             color: var(--text-row);
+            position: relative;
+            z-index: 2; 
         }
         .result-row:last-child { border-bottom: none; }
         .total-row {
@@ -406,6 +412,47 @@
         }
         .fine-row { color: var(--fine-color); font-weight: bold; }
         .fee-row { color: var(--fee-color); font-weight: bold; }
+
+        /* Speedometer UI (بە شێوازی Watermark بە کاڵی لە پشتەوە) */
+        .gauge-container {
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -40%); 
+            width: 220px; 
+            height: 110px; 
+            text-align: center; 
+            display: none;
+            opacity: 0.25; /* لێرەدا تۆخیمان زیاد کرد لە 0.12 بۆ 0.25 */
+            pointer-events: none; 
+            z-index: 0;
+        }
+        .gauge {
+            position: relative; width: 220px; height: 110px; overflow: hidden;
+            background: var(--slider-bg); border-top-left-radius: 110px; border-top-right-radius: 110px;
+        }
+        .gauge-fill {
+            position: absolute; top: 100%; left: 0; width: inherit; height: 100%;
+            background: #48bb78; transform-origin: center top; transform: rotate(0deg); 
+            transition: transform 0.8s ease-out, background 0.8s;
+            border-bottom-left-radius: 110px; border-bottom-right-radius: 110px;
+        }
+        .gauge-cover {
+            position: absolute; top: 22px; left: 22px; width: 176px; height: 88px;
+            background: var(--results-bg); 
+            border-top-left-radius: 88px; border-top-right-radius: 88px;
+        }
+        .needle {
+            position: absolute; bottom: 0; left: 50%; width: 5px; height: 90px;
+            background: var(--input-text); transform-origin: bottom center; 
+            transform: translateX(-50%) rotate(-90deg); 
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 5px; z-index: 2;
+        }
+        .needle::after {
+            content: ''; position: absolute; bottom: -7px; left: -4px; width: 14px; height: 14px;
+            background: var(--total-color); border-radius: 50%;
+        }
 
         .btn-copy {
             width: 100%;
@@ -521,7 +568,7 @@
     
     <div class="marquee-box">
         <div class="marquee-content">
-            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹 ڕێپێدراو : ئامانج محمد                ((بۆ هه‌رپرسیارێك ده‌رباره‌ی به‌شی مۆڵه‌تی هاتووچۆ هه‌ڵه‌بجه‌ په‌یوه‌ندی بكه‌ن به‌ ژماره‌ ته‌له‌فوونه‌وه‌   <a href="tel:07501611851" style="color: inherit; text-decoration: underline; direction: ltr; display: inline-block;">07501611851</a>
+            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹 ڕێپێدراو : ئامانج محمد            ((بۆ هه‌رپرسیارێك ده‌رباره‌ی به‌شی مۆڵه‌تی هاتووچۆ هه‌ڵه‌بجه‌ په‌یوه‌ندی بكه‌ن به‌ ژماره‌ ته‌له‌فوونه‌وه‌   <a href="tel:07501611851" style="color: inherit; text-decoration: underline; direction: ltr; display: inline-block;">07501611851</a>
         </div>
     </div>
     
@@ -572,17 +619,26 @@
     </div>
 
     <div class="results" id="results-box" style="opacity:0;">
-        <div class="result-row total-row">
-            <span>💰 کۆی گشتی:</span>
-            <span id="total-price">0 دینار</span>
+        <!-- گێچی خێرایی وەکو پاشبنەما لێرەدا دانراوە -->
+        <div class="gauge-container" id="speed-gauge">
+            <div class="gauge">
+                <div class="gauge-fill" id="gauge-fill"></div>
+                <div class="gauge-cover"></div>
+                <div class="needle" id="gauge-needle"></div>
+            </div>
+        </div>
+
+        <div class="result-row fee-row">
+            <span>🔵 رسومات:</span>
+            <span id="fee-price">60,000 دینار</span>
         </div>
         <div class="result-row fine-row">
             <span>🔴 غرامە:</span>
             <span id="fine-price">0 دینار</span>
         </div>
-        <div class="result-row fee-row">
-            <span>🔵 رسومات:</span>
-            <span id="fee-price">60,000 دینار</span>
+        <div class="result-row total-row">
+            <span>💰 کۆی گشتی:</span>
+            <span id="total-price">0 دینار</span>
         </div>
         <div class="result-row">
             <span>⏳ ماوەی بەسەرچوون:</span>
@@ -881,7 +937,6 @@
                 fine = 15000;
                 period = 'before2019';
             } else if (expiryDate >= date2022_M3_Start && expiryDate <= date2022_M3_End) {
-                // تەنها ۲۰ هەزاری جێگیر بۆ ئەم ۱۰ ڕۆژە
                 fine = 20000;
                 period = 'm3window';
             } else if (expiryDate > date2019 && expiryDate <= date2022_Start) {
@@ -962,6 +1017,9 @@
         }
 
         updateBreakdown(expiryDate, currentDate, result);
+        
+        // بانگکردنی فەنکشنی گێچی خێرایی لە ناو بۆکسی ئەنجامەکان
+        updateSpeedometer(finalFine);
     }
 
     function updateBreakdown(expiryDate, currentDate, result) {
@@ -1006,15 +1064,6 @@
         `;
     }
 
-    function toggleBreakdown() {
-        vibrate();
-        const box = document.getElementById('breakdown-box');
-        const label = document.getElementById('breakdown-toggle-text');
-        const isOpen = box.style.display === 'block';
-        box.style.display = isOpen ? 'none' : 'block';
-        label.textContent = isOpen ? 'بزانە چۆن ئەم ژمارەیە هاتووە' : 'شاردنەوەی وردەکاری';
-    }
-
     function copyReport() {
         const expiryStr = `${selectedYear}/${selectedMonth}/${selectedDay}`;
         const durationStr = document.getElementById('duration-text').textContent;
@@ -1053,6 +1102,36 @@
                 copyBtn.style.background = "";
             }, 1800);
         });
+    }
+
+    // لۆجیکی جولاندنی گێچی خێرایی غەرامە
+    function updateSpeedometer(fineAmount) {
+        const gaugeContainer = document.getElementById('speed-gauge');
+        if (fineAmount <= 0) {
+            gaugeContainer.style.display = 'none';
+            return;
+        }
+        gaugeContainer.style.display = 'block';
+        
+        // زۆرترین بڕی مەزەندەکراو بۆ غەرامە (بە دینار) بۆ ئەوەی گێچەکە بگاتە کۆتایی
+        const maxFine = 250000; 
+        let percentage = fineAmount / maxFine;
+        if (percentage > 1) percentage = 1;
+        
+        // هەژمارکردنی پلەی سوڕانەوە (لە ٩٠- بۆ ٩٠+)
+        const degrees = (percentage * 180) - 90; 
+        const fillDegrees = percentage * 180;
+        
+        const needle = document.getElementById('gauge-needle');
+        const fill = document.getElementById('gauge-fill');
+        
+        needle.style.transform = `translateX(-50%) rotate(${degrees}deg)`;
+        fill.style.transform = `rotate(${fillDegrees}deg)`;
+        
+        // گۆڕینی ڕەنگەکان بەپێی مەترسی
+        if (percentage < 0.2) fill.style.background = '#ecc94b'; // زەرد
+        else if (percentage < 0.5) fill.style.background = '#ed8936'; // پڕتەقاڵی
+        else fill.style.background = '#e53e3e'; // سوور
     }
 
     if ('serviceWorker' in navigator) {
