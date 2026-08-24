@@ -562,29 +562,40 @@
     <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
 
     <div class="authority-badge">
-        <div class="main-title">🏛️ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌</div>
-        <div class="sub-title">👮‍♂️ ئاماده‌كردنی ڕێپێدراوی هاتووچۆ : ڕاستی محمد حیدر </div>
+        <div class="main-title">🏛️ بەڕێوەبەرایەتی هاتووچۆی پارێزگای هەڵەبجە</div>
+        <div class="sub-title">👮‍♂️ ئامادەکردنی ڕێپێدراوی هاتووچۆ : ڕاستی محمد حیدر </div>
     </div>
     
     <div class="marquee-box">
         <div class="marquee-content">
-            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹 ڕێپێدراو : ئامانج محمد            ((بۆ هه‌رپرسیارێك ده‌رباره‌ی به‌شی مۆڵه‌تی هاتووچۆ هه‌ڵه‌بجه‌ په‌یوه‌ندی بكه‌ن به‌ ژماره‌ ته‌له‌فوونه‌وه‌   <a href="tel:07501611851" style="color: inherit; text-decoration: underline; direction: ltr; display: inline-block;">07501611851</a>
+            شۆفێری بەڕێز لەکاتی سەردانی کردنت بۆ بەڕێوەبەرایەتی هاتووچۆی پارێزگای هەڵەبجە بەمەبەستی نوێکردنەوەی مۆڵەتی شۆفێری ئەم پێداویستیانەت پێبێت پشکنینی چاو کارتی نیشتیمانی کارتی زانیاری پاسپۆرت سەرجەمیان ئەسڵی بن 🌹 ڕێپێدراو : ئامانج محمد            ((بۆ هەرپرسیارێک دەربارەی بەشی مۆڵەتی هاتووچۆ هەڵەبجە پەیوەندی بکەن بە ژمارە تەلەفوونەوە   <a href="tel:07501611851" style="color: inherit; text-decoration: underline; direction: ltr; display: inline-block;">07501611851</a>
         </div>
     </div>
     
     <!-- بەشی بەکارهێنەران -->
     <div id="visitor-counter" style="text-align:center; font-size:11.5px; color:var(--info-text); margin-bottom:12px;">
-        👁️  ژمــاره‌ی به‌ كارهێنه‌ر: <b id="visitor-count-text">...</b>
+        👁️  ژمارەی بە کارھێنەر: <b id="visitor-count-text">...</b>
     </div>
 
-    <div class="header">🚗  غه‌رامه‌ی مۆڵه‌تی شۆفێری 🚗</div>
+    <div class="header">🚗  غەرامەی مۆڵەتی شۆفێری 🚗</div>
     
     <div class="toggle-container">
-        <span id="status-text" style="font-weight: bold; color: #48bb78;">✓ داشكاندنی غەرامە (٢٠٪) چالاکە</span>
+        <span id="status-text" style="font-weight: bold; color: #48bb78;">✓ داشکاندنی غەرامە (٢٠٪) چالاکە</span>
         <label class="switch">
             <input type="checkbox" id="university-toggle" checked onchange="vibrate(); calculate()">
             <span class="slider"></span>
         </label>
+    </div>
+
+    <!-- بەشی پێداویستییەکان هێنرایە سەرووی بەشی ڕێکەوت -->
+    <div class="checklist-box">
+        <div class="checklist-title">📄 پێداویستییەکان بۆ نوێکردنەوەی مۆڵەت:</div>
+        <div class="checklist-items">
+            <div class="check-item">✅ کارتی نیشتیمانی</div>
+            <div class="check-item">✅ کارتی زانیاری</div>
+            <div class="check-item">✅ پاسپۆرت (ئەگەر هەبێت)</div>
+            <div class="check-item">✅ پشکنینی چاو</div>
+        </div>
     </div>
 
     <div class="date-section">
@@ -605,16 +616,6 @@
                 <label>ساڵ</label>
                 <div class="date-custom-input" id="year-btn" onclick="openModal('year')">2026</div>
             </div>
-        </div>
-    </div>
-
-    <div class="checklist-box">
-        <div class="checklist-title">📄 پێداویستییەکان بۆ نوێکردنەوەی مۆڵەت:</div>
-        <div class="checklist-items">
-            <div class="check-item">✅ كارتی نیشتیمانی</div>
-            <div class="check-item">✅ كارتی زانیاری</div>
-            <div class="check-item">✅ پاسپۆرت (ئەگەر هەبێت)</div>
-            <div class="check-item">✅ پشكنینی چاو</div>
         </div>
     </div>
 
@@ -648,7 +649,7 @@
 
     <div id="breakdown-toggle" style="display:none; text-align:center; margin-bottom:12px;">
         <button onclick="toggleBreakdown()" style="background:transparent; border:none; color:var(--total-color); font-size:12.5px; font-weight:bold; cursor:pointer; text-decoration:underline;">
-            🧮 <span id="breakdown-toggle-text">بزانە چۆن ئەم غه‌رامه‌ هاتووە</span>
+            🧮 <span id="breakdown-toggle-text">بزانە چۆن ئەم غەرامە هاتووە</span>
         </button>
         <div id="breakdown-box" style="display:none; text-align:right; background:var(--info-bg); border-radius:10px; padding:12px; margin-top:8px; font-size:12px; line-height:1.9; color:var(--info-text);"></div>
     </div>
@@ -660,7 +661,7 @@
     <button class="btn-copy" id="copy-btn" onclick="copyReport()">📋 کۆپیکردنی ڕاپۆرتی غەرامە</button>
 
     <div class="secondary-actions">
-        <a class="btn-secondary" href="https://www.google.com/maps/search/?api=1&query=%D8%A8%D9%87%E2%80%8C%DA%95%DB%8E%D9%88%D9%87%E2%80%8C%D8%A8%D9%87%E2%80%8C%D8%B1%D8%A7%DB%8E%D9%88%D9%87%E2%80%8C%D8%AA%DB%8C%20%D9%87%D8%A7%D8%AA%D9%88%D9%88%DA%86%DB%86%DB%8C%20%D9%BE%D8%A7%D8%B1%DB%8E%D8%B2%DA%AF%D8%A7%DB%8C%20%D9%87%D9%87%E2%80%8C%DA%B5%D9%87%E2%80%8C%D8%A8%D8%AC%D9%87%E2%80%8C" target="_blank" rel="noopener" style="flex:1; text-decoration:none;" onclick="vibrate()">📍  لۆكه‌یشنی به‌ڕێوه‌به‌رایه‌تی هاتووچۆی هه‌ڵه‌بجه‌</a>
+        <a class="btn-secondary" href="https://www.google.com/maps/search/?api=1&query=%D8%A8%D9%87%E2%80%8C%DA%95%DB%8E%D9%88%D9%87%E2%80%8C%D8%A8%D9%87%E2%80%8C%D8%B1%D8%A7%DB%8E%D9%88%D9%87%E2%80%8C%D8%AA%DB%8C%20%D9%87%D8%A7%D8%AA%D9%88%D9%88%DA%86%DB%86%DB%8C%20%D9%BE%D8%A7%D8%B1%DB%8E%D8%B2%DA%AF%D8%A7%DB%8C%20%D9%87%D9%87%E2%80%8C%DA%B5%D9%87%E2%80%8C%D8%A8%D8%AC%D9%87%E2%80%8C" target="_blank" rel="noopener" style="flex:1; text-decoration:none;" onclick="vibrate()">📍  لۆکەیشنی بەڕێوەبەرایەتی هاتووچۆی هەڵەبجە</a>
     </div>
 
     <div class="info-text">
@@ -970,10 +971,10 @@
         const statusText = document.getElementById('status-text');
         
         if(isDiscount) {
-            statusText.textContent = "✓ داشكاندنی غەرامە (٢٠٪) چالاکە";
+            statusText.textContent = "✓ داشکاندنی غەرامە (٢٠٪) چالاکە";
             statusText.style.color = "#48bb78";
         } else {
-            statusText.textContent = "✕ داشكاندنی غەرامە (٢٠٪) ناچالاکە";
+            statusText.textContent = "✕ داشکاندنی غەرامە (٢٠٪) ناچالاکە";
             statusText.style.color = "#e53e3e";
         }
 
@@ -1081,7 +1082,7 @@
 🔵 بڕی ڕسوومات: ${feeStr}
 💰 کۆی گشتی بۆ پێدان: ${totalStr}
 ----------------------------------
-🤖 ئاماده‌كردنی ڕێپێدراو : ڕاستی محمد حیدر`;
+🤖 ئامادەکردنی ڕێپێدراو : ڕاستی محمد حیدر`;
 
         const copyBtn = document.getElementById('copy-btn');
         const originalText = copyBtn.innerHTML;
@@ -1095,7 +1096,7 @@
                 copyBtn.style.background = "";
             }, 1800);
         }).catch(err => {
-            copyBtn.innerHTML = "✕ کێشەیەک لە کۆپیکردندا";
+            copyBtn.innerHTML = "✕ کێشەیەک لە کۆپیکردنیدا";
             copyBtn.style.background = "#e53e3e";
             setTimeout(() => {
                 copyBtn.innerHTML = originalText;
