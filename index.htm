@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Halabja</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="غەرامەی مۆڵەت">
+    
+    <link rel="manifest" id="pwa-manifest">
+    <meta name="theme-color" content="#1a365d">
+
+    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/300/traffic-light.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/300/traffic-light.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vaak-co/rabar-font@main/dist/font-face.css">
+
+    <style>
+        :root {
+            --bg-body: #f0f4f8;
+            --bg-container: white;
+            --border-container: #e2e8f0;
+            --badge-bg: linear-gradient(135deg, #1a365d, #2a4365);
+            --badge-text: white;
+            --header-bg: #edf2f7;
+            --header-text: #1a202c;
+            --toggle-bg: #f7fafc;
+            --toggle-border: #e2e8f0;
+            --slider-bg: #e2e8f0;
+            --date-bg: #fffaf0;
+            --date-border: #feebc8;
+            --date-title: #dd6b20;
+            --label-color: #718096;
+            --input-bg: white;
+            --input-border: #e2e8f0;
+            --input-text: #2d3748;
+            --results-bg: #f7fafc;
+            --results-border: #e2e8f0;
+            --text-row: #4a5568;
+            --total-color: #2b6cb0;
+            --fine-color: #e53e3e;
+            --fee-color: #3182ce;
+            --info-bg: #edf2f7;
+            --info-text: #718096;
+            --modal-overlay: rgba(0, 0, 0, 0.4);
+            --modal-bg: white;
+            --modal-text: #2d3748;
+            --grid-bg: #edf2f7;
+            --theme-btn-bg: rgba(0,0,0,0.05);
+            --theme-btn-border: rgba(0,0,0,0.1);
+            --theme-btn-text: #1a202c;
+            --btn-copy-bg: #2b6cb0;
+            --btn-copy-text: white;
+            --dynamic-status-color: #48bb78;
+            
+            --marquee-bg: #e2e8f0;
+            --marquee-text-color: #1a365d;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0f172a;
+            --bg-container: #1e293b;
+            --border-container: #334155;
+            --badge-bg: linear-gradient(135deg, #0f172a, #1e293b);
+            --badge-text: #f8fafc;
+            --header-bg: #334155;
+            --header-text: #f8fafc;
+            --toggle-bg: #1e293b;
+            --toggle-border: #334155;
+            --slider-bg: #475569;
+            --date-bg: rgba(245, 158, 11, 0.05);
+            --date-border: rgba(245, 158, 11, 0.2);
+            --date-title: #fbbf24;
+            --label-color: #94a3b8;
+            --input-bg: #0f172a;
+            --input-border: #334155;
+            --input-text: #f8fafc;
+            --results-bg: #0f172a;
+            --results-border: #334155;
+            --text-row: #94a3b8;
+            --total-color: #38bdf8;
+            --fine-color: #f87171;
+            --fee-color: #60a5fa;
+            --info-bg: #0f172a;
+            --info-text: #94a3b8;
+            --modal-overlay: rgba(15, 23, 42, 0.6);
+            --modal-bg: #1e293b;
+            --modal-text: #f8fafc;
+            --grid-bg: #334155;
+            --theme-btn-bg: rgba(255,255,255,0.08);
+            --theme-btn-border: rgba(255,255,255,0.15);
+            --theme-btn-text: #ffffff;
+            --btn-copy-bg: #38bdf8;
+            --btn-copy-text: #0f172a;
+            
+            --marquee-bg: #0f172a;
+            --marquee-text-color: #38bdf8;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Rabar', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        body {
+            background-color: var(--bg-body);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            padding-bottom: 120px; 
+        }
+        .container {
+            background: var(--bg-container);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 20px;
+            border: 2px solid var(--border-container);
+            position: relative;
+            animation: containerFadeIn 0.4s ease-out;
+        }
+        @keyframes containerFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .theme-toggle-btn {
+            position: absolute;
+            top: 26px;
+            left: 25px;
+            background: var(--theme-btn-bg);
+            border: 1px solid var(--theme-btn-border);
+            color: var(--theme-btn-text);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            z-index: 10;
+        }
+
+        .authority-badge {
+            text-align: center;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            padding: 12px 12px 12px 50px; 
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: block;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(26, 54, 93, 0.1);
+        }
+        .main-title {
+            font-size: 13.5px; 
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+            color: var(--badge-text);
+        }
+        .sub-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fbd38d; 
+        }
+        [data-theme="dark"] .sub-title { color: #38bdf8; }
+        
+        .marquee-box {
+            width: 100%;
+            overflow: hidden;
+            background: var(--marquee-bg);
+            border-radius: 10px;
+            padding: 8px 0;
+            margin-bottom: 15px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+        }
+        .marquee-content {
+            display: inline-block;
+            white-space: nowrap;
+            font-size: 12.5px;
+            font-weight: bold;
+            color: var(--marquee-text-color);
+            animation: scroll-rtl 40s linear -10s infinite;
+        }
+        
+       @keyframes scroll-rtl {
+            from { transform: translateX(-20%); }
+            to { transform: translateX(100%); }
+        }
+
+        .header {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--header-text);
+            margin-bottom: 15px;
+            background: var(--header-bg);
+            padding: 12px;
+            border-radius: 12px;
+        }
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--toggle-bg);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--toggle-border);
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--slider-bg);
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px; width: 26px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #48bb78; }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .date-section {
+            background: var(--date-bg);
+            border: 1px solid var(--date-border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .date-title-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .date-title {
+            color: var(--date-title);
+            font-weight: bold;
+            font-size: 14.5px;
+        }
+        .btn-reset {
+            background: transparent;
+            border: 1px solid var(--date-border);
+            color: var(--date-title);
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-size: 11.5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-reset:active { transform: scale(0.95); }
+
+        .date-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        .date-box {
+            flex: 1;
+            text-align: center;
+        }
+        .date-box label {
+            display: block;
+            font-size: 13px;
+            color: var(--label-color);
+            margin-bottom: 5px;
+        }
+        .date-custom-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--input-border);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--input-text);
+            background: var(--input-bg);
+            cursor: pointer;
+        }
+
+        .checklist-box {
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+        }
+        .checklist-title {
+            font-size: 12.5px;
+            font-weight: bold;
+            color: var(--header-text);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .checklist-items {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            font-size: 11.5px;
+            color: var(--label-color);
+        }
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--modal-overlay);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--modal-bg);
+            padding: 20px;
+            border-radius: 16px;
+            width: 95%;
+            max-width: 380px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            animation: fadeIn 0.2s ease-out;
+        }
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: var(--modal-text);
+            font-size: 15px;
+        }
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        .grid-item {
+            padding: 10px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--grid-bg);
+            border-radius: 8px;
+            font-weight: bold;
+            color: var(--input-text);
+            cursor: pointer;
+            user-select: none;
+        }
+        .grid-item.selected-item {
+            background: #3182ce !important;
+            color: white !important;
+            box-shadow: 0 2px 8px rgba(49, 130, 206, 0.4);
+            border: 2px solid #63b3ed;
+        }
+
+        /* بەشی ئەنجامەکان و گێچەکەی ناوی */
+        .results {
+            background: var(--results-bg);
+            border-radius: 12px;
+            padding: 15px;
+            border: 2px solid var(--dynamic-status-color);
+            margin-bottom: 15px;
+            transition: opacity 0.35s ease-in-out, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative; 
+            overflow: hidden; 
+            z-index: 1;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--results-border);
+            font-size: 15px;
+            color: var(--text-row);
+            position: relative;
+            z-index: 2; 
+        }
+        .result-row:last-child { border-bottom: none; }
+        .total-row {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--total-color);
+        }
+        .fine-row { color: var(--fine-color); font-weight: bold; }
+        .fee-row { color: var(--fee-color); font-weight: bold; }
+
+        /* Speedometer UI (بە شێوازی Watermark بە کاڵی لە پشتەوە) */
+        .gauge-container {
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -40%); 
+            width: 220px; 
+            height: 110px; 
+            text-align: center; 
+            display: none;
+            opacity: 0.25; /* لێرەدا تۆخیمان زیاد کرد لە 0.12 بۆ 0.25 */
+            pointer-events: none; 
+            z-index: 0;
+        }
+        .gauge {
+            position: relative; width: 220px; height: 110px; overflow: hidden;
+            background: var(--slider-bg); border-top-left-radius: 110px; border-top-right-radius: 110px;
+        }
+        .gauge-fill {
+            position: absolute; top: 100%; left: 0; width: inherit; height: 100%;
+            background: #48bb78; transform-origin: center top; transform: rotate(0deg); 
+            transition: transform 0.8s ease-out, background 0.8s;
+            border-bottom-left-radius: 110px; border-bottom-right-radius: 110px;
+        }
+        .gauge-cover {
+            position: absolute; top: 22px; left: 22px; width: 176px; height: 88px;
+            background: var(--results-bg); 
+            border-top-left-radius: 88px; border-top-right-radius: 88px;
+        }
+        .needle {
+            position: absolute; bottom: 0; left: 50%; width: 5px; height: 90px;
+            background: var(--input-text); transform-origin: bottom center; 
+            transform: translateX(-50%) rotate(-90deg); 
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 5px; z-index: 2;
+        }
+        .needle::after {
+            content: ''; position: absolute; bottom: -7px; left: -4px; width: 14px; height: 14px;
+            background: var(--total-color); border-radius: 50%;
+        }
+
+        .btn-copy {
+            width: 100%;
+            padding: 12px;
+            background: var(--btn-copy-bg);
+            color: var(--btn-copy-text);
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 5px;
+        }
+        .btn-copy:active { transform: scale(0.98); }
+
+        .secondary-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .btn-secondary {
+            flex: 1;
+            padding: 10px 6px;
+            background: transparent;
+            color: var(--input-text);
+            border: 2px solid var(--input-border);
+            border-radius: 10px;
+            font-size: 11.5px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            text-align: center;
+        }
+
+        .faq-section { margin-top: 12px; }
+        .faq-section summary {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12.5px;
+            color: var(--header-text);
+            padding: 10px;
+            background: var(--info-bg);
+            border-radius: 8px;
+            margin-bottom: 4px;
+            list-style: none;
+        }
+        .faq-section summary::-webkit-details-marker { display: none; }
+        .faq-section summary::before { content: '❓ '; }
+        .faq-section details[open] summary { border-radius: 8px 8px 0 0; }
+        .faq-section .faq-answer {
+            font-size: 12px;
+            color: var(--info-text);
+            line-height: 1.8;
+            padding: 10px;
+            background: var(--info-bg);
+            border-radius: 0 0 8px 8px;
+            margin-top: -4px;
+            margin-bottom: 4px;
+        }
+        
+        .info-text {
+            font-size: 12px;
+            color: var(--info-text);
+            margin-top: 15px;
+            text-align: justify;
+            line-height: 1.8;
+            background: var(--info-bg);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .pwa-loop-prompt {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 430px;
+            background: #1a365d;
+            color: white;
+            padding: 14px 18px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            z-index: 9999;
+            text-align: right;
+            font-size: 13.5px;
+            line-height: 1.6;
+            border: 1px solid #ecc94b;
+        }
+        .pwa-loop-text {
+            display: block;
+            min-height: 45px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="main-container">
+    <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
+
+    <div class="authority-badge">
+        <div class="main-title">🏛️ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌</div>
+        <div class="sub-title">👮‍♂️ ئاماده‌كردنی ڕێپێدراوی هاتووچۆ : ڕاستی محمد حیدر </div>
+    </div>
+    
+    <div class="marquee-box">
+        <div class="marquee-content">
+            شۆفێری به‌ڕێز له‌كاتی سه‌ردانی كردنت بۆ به‌ڕێوه‌به‌رایه‌تی هاتووچۆی پارێزگای هه‌ڵه‌بجه‌ به‌مه‌به‌ستی نوێكردنه‌وه‌ی مۆڵه‌تی شۆفێری ئه‌م پێداویستیانه‌ت پێبێت پشكنینی چاو كارتی نیشتیمانی كارتی زانیاری پاسپۆرت سه‌رجه‌میان ئه‌سڵی بن 🌹 ڕێپێدراو : ئامانج محمد            ((بۆ هه‌رپرسیارێك ده‌رباره‌ی به‌شی مۆڵه‌تی هاتووچۆ هه‌ڵه‌بجه‌ په‌یوه‌ندی بكه‌ن به‌ ژماره‌ ته‌له‌فوونه‌وه‌   <a href="tel:07501611851" style="color: inherit; text-decoration: underline; direction: ltr; display: inline-block;">07501611851</a>
+        </div>
+    </div>
+    
+    <!-- بەشی بەکارهێنەران -->
+    <div id="visitor-counter" style="text-align:center; font-size:11.5px; color:var(--info-text); margin-bottom:12px;">
+        👁️  ژمــاره‌ی به‌ كارهێنه‌ر: <b id="visitor-count-text">...</b>
+    </div>
+
+    <div class="header">🚗  غه‌رامه‌ی مۆڵه‌تی شۆفێری 🚗</div>
+    
+    <div class="toggle-container">
+        <span id="status-text" style="font-weight: bold; color: #48bb78;">✓ داشكاندنی غەرامە (٢٠٪) چالاکە</span>
+        <label class="switch">
+            <input type="checkbox" id="university-toggle" checked onchange="vibrate(); calculate()">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="date-section">
+        <div class="date-title-wrap">
+            <div class="date-title">📅 ڕێکەوتی بەسەرچوونی مۆڵەت:</div>
+            <button class="btn-reset" onclick="resetToToday()">🔄 ئەمڕۆ</button>
+        </div>
+        <div class="date-inputs">
+            <div class="date-box">
+                <label>ڕۆژ</label>
+                <div class="date-custom-input" id="day-btn" onclick="openModal('day')">10</div>
+            </div>
+            <div class="date-box">
+                <label>مانگ</label>
+                <div class="date-custom-input" id="month-btn" onclick="openModal('month')">7</div>
+            </div>
+            <div class="date-box">
+                <label>ساڵ</label>
+                <div class="date-custom-input" id="year-btn" onclick="openModal('year')">2026</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="checklist-box">
+        <div class="checklist-title">📄 پێداویستییەکان بۆ نوێکردنەوەی مۆڵەت:</div>
+        <div class="checklist-items">
+            <div class="check-item">✅ كارتی نیشتیمانی</div>
+            <div class="check-item">✅ كارتی زانیاری</div>
+            <div class="check-item">✅ پاسپۆرت (ئەگەر هەبێت)</div>
+            <div class="check-item">✅ پشكنینی چاو</div>
+        </div>
+    </div>
+
+    <div class="results" id="results-box" style="opacity:0;">
+        <!-- گێچی خێرایی وەکو پاشبنەما لێرەدا دانراوە -->
+        <div class="gauge-container" id="speed-gauge">
+            <div class="gauge">
+                <div class="gauge-fill" id="gauge-fill"></div>
+                <div class="gauge-cover"></div>
+                <div class="needle" id="gauge-needle"></div>
+            </div>
+        </div>
+
+        <div class="result-row fee-row">
+            <span>🔵 رسومات:</span>
+            <span id="fee-price">60,000 دینار</span>
+        </div>
+        <div class="result-row fine-row">
+            <span>🔴 غرامە:</span>
+            <span id="fine-price">0 دینار</span>
+        </div>
+        <div class="result-row total-row">
+            <span>💰 کۆی گشتی:</span>
+            <span id="total-price">0 دینار</span>
+        </div>
+        <div class="result-row">
+            <span>⏳ ماوەی بەسەرچوون:</span>
+            <span id="duration-text">0 مانگ</span>
+        </div>
+    </div>
+
+    <div id="breakdown-toggle" style="display:none; text-align:center; margin-bottom:12px;">
+        <button onclick="toggleBreakdown()" style="background:transparent; border:none; color:var(--total-color); font-size:12.5px; font-weight:bold; cursor:pointer; text-decoration:underline;">
+            🧮 <span id="breakdown-toggle-text">بزانە چۆن ئەم غه‌رامه‌ هاتووە</span>
+        </button>
+        <div id="breakdown-box" style="display:none; text-align:right; background:var(--info-bg); border-radius:10px; padding:12px; margin-top:8px; font-size:12px; line-height:1.9; color:var(--info-text);"></div>
+    </div>
+
+    <div id="ok-message" style="display:none; text-align:center; background: rgba(72,187,120,0.12); color:#2f855a; border:1px solid rgba(72,187,120,0.3); border-radius:10px; padding:10px; margin-bottom:15px; font-weight:bold; font-size:13.5px;">
+        ✅ مۆڵەتەکەت هێشتا بەسەرنەچووە، پێویست بە غەرامە ناکات
+    </div>
+
+    <button class="btn-copy" id="copy-btn" onclick="copyReport()">📋 کۆپیکردنی ڕاپۆرتی غەرامە</button>
+
+    <div class="secondary-actions">
+        <a class="btn-secondary" href="https://www.google.com/maps/search/?api=1&query=%D8%A8%D9%87%E2%80%8C%DA%95%DB%8E%D9%88%D9%87%E2%80%8C%D8%A8%D9%87%E2%80%8C%D8%B1%D8%A7%DB%8E%D9%88%D9%87%E2%80%8C%D8%AA%DB%8C%20%D9%87%D8%A7%D8%AA%D9%88%D9%88%DA%86%DB%86%DB%8C%20%D9%BE%D8%A7%D8%B1%DB%8E%D8%B2%DA%AF%D8%A7%DB%8C%20%D9%87%D9%87%E2%80%8C%DA%B5%D9%87%E2%80%8C%D8%A8%D8%AC%D9%87%E2%80%8C" target="_blank" rel="noopener" style="flex:1; text-decoration:none;" onclick="vibrate()">📍  لۆكه‌یشنی به‌ڕێوه‌به‌رایه‌تی هاتووچۆی هه‌ڵه‌بجه‌</a>
+    </div>
+
+    <div class="info-text">
+        ℹ️ <b>یاساکانی مۆڵەت:</b> ڕسووماتی جێگیر ٦٠,٠٠٠ دینارە. غەرامەکان بە چوار قۆناغ ئەژمار دەکرێن (پێش 3.12.2019 جێگیرە بە ١٥ هەزار، لە نێوان 4.12.2019 بۆ 6.7.2022 ساڵانەیە بە ٣٠ هەزار، لە نێوان 7.7.2022 بۆ 17.7.2022 جێگیرە بە ٢٠ هەزار، و لە 18.7.2022 بەدواوە مانگانەیە بە ٥ هەزار دینار بە لێخۆشبوونی یەک مانگ لە ئەژمارکردنی ماوە و غەرامە).
+    </div>
+
+    <div class="faq-section">
+        <details>
+            <summary>کاتی پێویست بۆ نوێکردنەوەی مۆڵەت چەندە؟</summary>
+            <div class="faq-answer">لە زۆربەی حاڵەتەکاندا کارەکە لە هەمان ڕۆژدا تەواو دەبێت ئەگەر پێداویستییەکان تەواو بن.</div>
+        </details>
+    </div>
+</div>
+
+<div id="pwa-loop-container" class="pwa-loop-prompt">
+    <span id="pwa-loop-content" class="pwa-loop-text">🤖 باردەبێت...</span>
+</div>
+
+<div class="modal-overlay" id="picker-modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 id="modal-title">دیاریکردنی ژمارە</h3>
+        <div class="number-grid" id="modal-grid"></div>
+    </div>
+</div>
+
+<script>
+    const manifestData = {
+        "name": "سیستەمی غەرامەی مۆڵەت - هەڵەبجە",
+        "short_name": "غەرامەی مۆڵەت",
+        "description": "ئەپی ئەژمارکردنی غەرامەی مۆڵەتی شۆفێری هاتووچۆی هەڵەبجە",
+        "start_url": window.location.href,
+        "display": "standalone",
+        "background_color": "#1a365d",
+        "theme_color": "#1a365d",
+        "orientation": "portrait-primary",
+        "icons": [{
+            "src": "https://img.icons8.com/fluency/300/traffic-light.png",
+            "sizes": "300x300",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }]
+    };
+    const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+    document.getElementById('pwa-manifest').setAttribute('href', URL.createObjectURL(manifestBlob));
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.getElementById('theme-btn').textContent = '☀️';
+    }
+
+    const today = new Date();
+    let selectedDay = today.getDate();
+    let selectedMonth = today.getMonth() + 1; 
+    let selectedYear = today.getFullYear();
+
+    let currentValues = { total: 0, fine: 0, duration: 0 };
+    let userSetDate = false;
+
+    document.getElementById('day-btn').textContent = selectedDay;
+    document.getElementById('month-btn').textContent = selectedMonth;
+    document.getElementById('year-btn').textContent = selectedYear;
+
+    calculate(true);
+    document.getElementById('results-box').style.opacity = '1';
+
+    function resetToToday() {
+        vibrate();
+        const now = new Date();
+        selectedDay = now.getDate();
+        selectedMonth = now.getMonth() + 1;
+        selectedYear = now.getFullYear();
+        
+        document.getElementById('day-btn').textContent = selectedDay;
+        document.getElementById('month-btn').textContent = selectedMonth;
+        document.getElementById('year-btn').textContent = selectedYear;
+        userSetDate = false;
+        calculate();
+    }
+
+    function updateVisitorCounter() {
+        const el = document.getElementById('visitor-count-text');
+        if (!el) return;
+        
+        const BASE_COUNT = 9000; 
+        const updateKey = '2026-08-05'; 
+        const namespace = 'traffic-halabja-app';
+        const countedFlag = 'counted_' + updateKey;
+        const alreadyCounted = sessionStorage.getItem(countedFlag);
+        const endpoint = alreadyCounted ? 'get' : 'hit';
+        const url = `https://abacus.jasoncameron.dev/${endpoint}/${namespace}/${updateKey}`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (!alreadyCounted) sessionStorage.setItem(countedFlag, '1');
+                const totalVisitors = BASE_COUNT + (data.value || 0);
+                el.textContent = totalVisitors.toLocaleString();
+            })
+            .catch(() => { 
+                el.textContent = BASE_COUNT.toLocaleString(); 
+            });
+    }
+    updateVisitorCounter();
+
+    function vibrate(ms = 15) {
+        if (navigator.vibrate) navigator.vibrate(ms);
+    }
+
+    function toggleTheme() {
+        vibrate();
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const themeBtn = document.getElementById('theme-btn');
+        if (currentTheme === 'dark') {
+            document.documentElement.removeAttribute('data-theme');
+            themeBtn.textContent = '🌙';
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeBtn.textContent = '☀️';
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+
+    const hints = [
+        "🤖 <b>بۆ خستنە سەر شاشە لە ئەندرۆید:</b> لە سەرەوە کلیک لەسەر <b>سێ خاڵەکە ⋮</b> بکە و پاشان <b>Add to Home screen</b> هەڵبژێرە.",
+        "🍏 <b>بۆ خستنە سەر شاشە لە ئایفۆن:</b> لە Safari کلیک لەسەر نیشانەی <b>Share ⎋</b> بکە لە خوارەوە و پاشان <b>Add to Home Screen</b> هەڵبژێرە."
+    ];
+    let currentHintIndex = 0;
+    const contentElement = document.getElementById('pwa-loop-content');
+    
+    function rotateHints() {
+        if(!contentElement) return;
+        contentElement.style.opacity = 0; 
+        setTimeout(() => {
+            contentElement.innerHTML = hints[currentHintIndex];
+            contentElement.style.opacity = 1; 
+            currentHintIndex = (currentHintIndex + 1) % hints.length;
+        }, 300);
+    }
+    
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (!isStandalone) {
+        if(contentElement) {
+            contentElement.innerHTML = hints[0];
+            currentHintIndex = 1; 
+        }
+        setInterval(rotateHints, 5000); 
+    } else {
+        document.getElementById('pwa-loop-container').style.display = 'none';
+    }
+
+    function getDaysInMonth(month, year) {
+        return new Date(year, month, 0).getDate();
+    }
+
+    function openModal(type) {
+        const modal = document.getElementById('picker-modal');
+        const title = document.getElementById('modal-title');
+        const grid = document.getElementById('modal-grid');
+        grid.innerHTML = ''; 
+        
+        if (type === 'day') {
+            title.textContent = '📅 ڕۆژێك دیاری بكه‌';
+            const daysCount = getDaysInMonth(selectedMonth, selectedYear);
+            for (let i = 1; i <= daysCount; i++) {
+                let item = document.createElement('div');
+                item.className = 'grid-item';
+                if (i === selectedDay) item.classList.add('selected-item');
+                item.textContent = i;
+                item.onclick = function() {
+                    vibrate();
+                    selectedDay = i;
+                    userSetDate = true;
+                    document.getElementById('day-btn').textContent = i;
+                    modal.style.display = 'none';
+                    calculate();
+                };
+                grid.appendChild(item);
+            }
+        } else if (type === 'month') {
+            title.textContent = '📅 مانگێك دیاری بكه‌';
+            for (let i = 1; i <= 12; i++) {
+                let item = document.createElement('div');
+                item.className = 'grid-item';
+                if (i === selectedMonth) item.classList.add('selected-item');
+                item.textContent = i;
+                item.onclick = function() {
+                    vibrate();
+                    selectedMonth = i;
+                    userSetDate = true;
+                    document.getElementById('month-btn').textContent = i;
+                    const maxDays = getDaysInMonth(i, selectedYear);
+                    if (selectedDay > maxDays) {
+                        selectedDay = maxDays;
+                        document.getElementById('day-btn').textContent = maxDays;
+                    }
+                    modal.style.display = 'none';
+                    calculate();
+                };
+                grid.appendChild(item);
+            }
+        } else if (type === 'year') {
+            title.textContent = '📅 ساڵێك دیاری بكه‌';
+            for (let i = 2015; i <= 2035; i++) {
+                let item = document.createElement('div');
+                item.className = 'grid-item';
+                if (i === selectedYear) item.classList.add('selected-item');
+                item.textContent = i;
+                item.onclick = function() {
+                    vibrate();
+                    selectedYear = i;
+                    userSetDate = true;
+                    document.getElementById('year-btn').textContent = i;
+                    const maxDays = getDaysInMonth(selectedMonth, i);
+                    if (selectedDay > maxDays) {
+                        selectedDay = maxDays;
+                        document.getElementById('day-btn').textContent = maxDays;
+                    }
+                    modal.style.display = 'none';
+                    calculate();
+                };
+                grid.appendChild(item);
+            }
+        }
+        modal.style.display = 'flex';
+    }
+
+    function closeModal(event) {
+        document.getElementById('picker-modal').style.display = 'none';
+    }
+
+    function animateValue(id, start, end, duration, isCurrency = true) {
+        let el = document.getElementById(id);
+        if(!el) return;
+        if (start === end) {
+            el.textContent = end.toLocaleString() + (isCurrency ? " دینار" : " مانگ");
+            return;
+        }
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const current = Math.floor(progress * (end - start) + start);
+            el.textContent = current.toLocaleString() + (isCurrency ? " دینار" : " مانگ");
+            if (progress < 1) window.requestAnimationFrame(step);
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    function computeFine(expiryDate, asOfDate, isDiscount) {
+        const date2019 = new Date(2019, 11, 3);
+        const date2022_Start = new Date(2022, 6, 6);
+        const date2022_M3_Start = new Date(2022, 6, 7);
+        const date2022_M3_End = new Date(2022, 6, 17);
+
+        let totalMonths = 0;
+        let displayMonths = 0;
+        let fine = 0;
+        let baseFee = 60000;
+        let period = null;
+        let years = 0;
+
+        if (expiryDate < asOfDate) {
+            let yearDiff = asOfDate.getFullYear() - expiryDate.getFullYear();
+            let monthDiff = asOfDate.getMonth() - expiryDate.getMonth();
+            let dayDiff = asOfDate.getDate() - expiryDate.getDate();
+
+            totalMonths = (yearDiff * 12) + monthDiff;
+            if (dayDiff > 0) totalMonths += 1;
+            displayMonths = totalMonths;
+
+            if (expiryDate <= date2019) {
+                fine = 15000;
+                period = 'before2019';
+            } else if (expiryDate >= date2022_M3_Start && expiryDate <= date2022_M3_End) {
+                fine = 20000;
+                period = 'm3window';
+            } else if (expiryDate > date2019 && expiryDate <= date2022_Start) {
+                let totalYears = asOfDate.getFullYear() - expiryDate.getFullYear();
+                if (asOfDate.getMonth() > expiryDate.getMonth() ||
+                   (asOfDate.getMonth() === expiryDate.getMonth() && asOfDate.getDate() > expiryDate.getDate())) {
+                    totalYears += 1;
+                }
+                if (totalYears === 0) totalYears = 1;
+                fine = totalYears * 30000;
+                period = '2019to2022';
+                years = totalYears;
+            } else {
+                const finePerMonth = 5000;
+                let chargeableMonths = totalMonths > 1 ? totalMonths - 1 : 0;
+                fine = chargeableMonths * finePerMonth;
+                displayMonths = chargeableMonths;
+                period = 'after2022';
+            }
+        }
+
+        let finalFine = isDiscount ? fine * 0.8 : fine;
+        let totalPrice = baseFee + finalFine;
+        let targetMonths = (expiryDate < asOfDate ? displayMonths : 0);
+
+        return { fine: finalFine, rawFine: fine, total: totalPrice, months: targetMonths, baseFee, period, years, isDiscount };
+    }
+
+    function calculate(skipAnimation = false) {
+        const isDiscount = document.getElementById('university-toggle').checked;
+        const statusText = document.getElementById('status-text');
+        
+        if(isDiscount) {
+            statusText.textContent = "✓ داشكاندنی غەرامە (٢٠٪) چالاکە";
+            statusText.style.color = "#48bb78";
+        } else {
+            statusText.textContent = "✕ داشكاندنی غەرامە (٢٠٪) ناچالاکە";
+            statusText.style.color = "#e53e3e";
+        }
+
+        const expiryDate = new Date(selectedYear, selectedMonth - 1, selectedDay);
+        const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        const result = computeFine(expiryDate, currentDate, isDiscount);
+        const finalFine = result.fine;
+        const totalPrice = result.total;
+        const targetMonths = result.months;
+        const baseFee = result.baseFee;
+
+        if (skipAnimation) {
+            document.getElementById('duration-text').textContent = targetMonths + " مانگ";
+            document.getElementById('fine-price').textContent = finalFine.toLocaleString() + " دینار";
+            document.getElementById('total-price').textContent = totalPrice.toLocaleString() + " دینار";
+        } else {
+            animateValue('duration-text', currentValues.duration, targetMonths, 250, false);
+            animateValue('fine-price', currentValues.fine, finalFine, 350, true);
+            animateValue('total-price', currentValues.total, totalPrice, 400, true);
+        }
+
+        currentValues.duration = targetMonths;
+        currentValues.fine = finalFine;
+        currentValues.total = totalPrice;
+
+        document.getElementById('fee-price').textContent = baseFee.toLocaleString() + " دینار";
+
+        const mainContainer = document.getElementById('main-container');
+        const okMessage = document.getElementById('ok-message');
+        if (expiryDate < currentDate && finalFine > 0) {
+            document.documentElement.style.setProperty('--dynamic-status-color', '#e53e3e');
+            mainContainer.style.borderColor = 'rgba(229, 62, 62, 0.4)';
+            mainContainer.style.boxShadow = '0 10px 30px rgba(229, 62, 62, 0.15)';
+            okMessage.style.display = 'none';
+        } else {
+            document.documentElement.style.setProperty('--dynamic-status-color', '#48bb78');
+            mainContainer.style.borderColor = 'rgba(72, 187, 120, 0.4)';
+            mainContainer.style.boxShadow = '0 10px 30px rgba(72, 187, 120, 0.15)';
+            okMessage.style.display = (userSetDate ? 'block' : 'none');
+        }
+
+        updateBreakdown(expiryDate, currentDate, result);
+        
+        // بانگکردنی فەنکشنی گێچی خێرایی لە ناو بۆکسی ئەنجامەکان
+        updateSpeedometer(finalFine);
+    }
+
+    function updateBreakdown(expiryDate, currentDate, result) {
+        const toggleWrap = document.getElementById('breakdown-toggle');
+        const box = document.getElementById('breakdown-box');
+        const expiryStr = `${selectedDay}/${selectedMonth}/${selectedYear}`;
+
+        if (!(expiryDate < currentDate) || result.rawFine === 0) {
+            toggleWrap.style.display = 'none';
+            box.style.display = 'none';
+            return;
+        }
+
+        toggleWrap.style.display = 'block';
+
+        let periodLabel = '';
+        let ruleLine = '';
+        if (result.period === 'before2019') {
+            periodLabel = 'پێش ٣/١٢/٢٠١٩';
+            ruleLine = `لەم قۆناغەدا غەرامەکە جێگیرە و نایگۆڕدرێت: <b>١٥,٠٠٠ دینار</b>`;
+        } else if (result.period === '2019to2022') {
+            periodLabel = 'لە نێوان ٤/١٢/٢٠١٩ بۆ ٦/٧/٢٠٢٢';
+            ruleLine = `لەم قۆناغەدا غەرامەکە ساڵانەیە بە ٣٠,٠٠٠ دینار: <b>${result.years} ساڵ × ٣٠,٠٠٠ = ${(result.years * 30000).toLocaleString()} دینار</b>`;
+        } else if (result.period === 'm3window') {
+            periodLabel = 'لە نێوان ٧/٧/٢٠٢٢ بۆ ١٧/٧/٢٠٢٢';
+            ruleLine = `لەم قۆناغەدا غەرامەکە جێگیرە و بە ساڵ حساب ناکرێت: <b>٢٠,٠٠٠ دینار</b>`;
+        } else if (result.period === 'after2022') {
+            periodLabel = 'لە ١٨/٧/٢٠٢٢ بەدواوە';
+            const chargeableMonths = result.months;
+            ruleLine = `لەم قۆناغەدا غەرامەکە مانگانەیە بە ٥,٠٠٠ دینار، لەگەڵ لێخۆشبوونی یەک مانگی یەکەم: <b>${chargeableMonths} مانگی حیسابکراو × ٥,٠٠٠ = ${(chargeableMonths * 5000).toLocaleString()} دینار</b>`;
+        }
+
+        const discountLine = result.isDiscount
+            ? `پاشان داشکاندنی ٢٠٪ کرا: <b>${result.rawFine.toLocaleString()} - ٪٢٠ = ${result.fine.toLocaleString()} دینار</b>`
+            : `داشکاندن چالاک نەبوو، غەرامەکە بە تەواوی ماوە: <b>${result.fine.toLocaleString()} دینار</b>`;
+
+        box.innerHTML = `
+            <div style="margin-bottom:6px;">📅 بەرواری بەسەرچوون: <b>${expiryStr}</b> — دەکەوێتە قۆناغی: <b>${periodLabel}</b></div>
+            <div style="margin-bottom:6px;">${ruleLine}</div>
+            <div style="margin-bottom:6px;">${discountLine}</div>
+            <div>➕ ڕسووماتی جێگیر: <b>٦٠,٠٠٠ دینار</b> &nbsp;➜&nbsp; کۆی گشتی: <b style="color:var(--total-color);">${result.total.toLocaleString()} دینار</b></div>
+        `;
+    }
+
+    function copyReport() {
+        const expiryStr = `${selectedYear}/${selectedMonth}/${selectedDay}`;
+        const durationStr = document.getElementById('duration-text').textContent;
+        const fineStr = document.getElementById('fine-price').textContent;
+        const feeStr = document.getElementById('fee-price').textContent;
+        const totalStr = document.getElementById('total-price').textContent;
+        
+        const reportText = 
+`🏛️ ڕاپۆرتی حسابکردنی غەرامەی مۆڵەت
+📌 بەڕێوەبەرایەتی هاتووچۆی پارێزگای هەڵەبجە 
+----------------------------------
+📅 ڕێکەوتی بەسەرچوون: ${expiryStr}
+⏳ ماوەی بەسەرچوون: ${durationStr}
+🔴 بڕی غەرامە: ${fineStr}
+🔵 بڕی ڕسوومات: ${feeStr}
+💰 کۆی گشتی بۆ پێدان: ${totalStr}
+----------------------------------
+🤖 ئاماده‌كردنی ڕێپێدراو : ڕاستی محمد حیدر`;
+
+        const copyBtn = document.getElementById('copy-btn');
+        const originalText = copyBtn.innerHTML;
+
+        navigator.clipboard.writeText(reportText).then(() => {
+            vibrate(20);
+            copyBtn.innerHTML = "✓ کۆپیکرا بۆ مۆبایلەکەت!";
+            copyBtn.style.background = "#48bb78";
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+                copyBtn.style.background = "";
+            }, 1800);
+        }).catch(err => {
+            copyBtn.innerHTML = "✕ کێشەیەک لە کۆپیکردندا";
+            copyBtn.style.background = "#e53e3e";
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+                copyBtn.style.background = "";
+            }, 1800);
+        });
+    }
+
+    // لۆجیکی جولاندنی گێچی خێرایی غەرامە
+    function updateSpeedometer(fineAmount) {
+        const gaugeContainer = document.getElementById('speed-gauge');
+        if (fineAmount <= 0) {
+            gaugeContainer.style.display = 'none';
+            return;
+        }
+        gaugeContainer.style.display = 'block';
+        
+        // زۆرترین بڕی مەزەندەکراو بۆ غەرامە (بە دینار) بۆ ئەوەی گێچەکە بگاتە کۆتایی
+        const maxFine = 250000; 
+        let percentage = fineAmount / maxFine;
+        if (percentage > 1) percentage = 1;
+        
+        // هەژمارکردنی پلەی سوڕانەوە (لە ٩٠- بۆ ٩٠+)
+        const degrees = (percentage * 180) - 90; 
+        const fillDegrees = percentage * 180;
+        
+        const needle = document.getElementById('gauge-needle');
+        const fill = document.getElementById('gauge-fill');
+        
+        needle.style.transform = `translateX(-50%) rotate(${degrees}deg)`;
+        fill.style.transform = `rotate(${fillDegrees}deg)`;
+        
+        // گۆڕینی ڕەنگەکان بەپێی مەترسی
+        if (percentage < 0.2) fill.style.background = '#ecc94b'; // زەرد
+        else if (percentage < 0.5) fill.style.background = '#ed8936'; // پڕتەقاڵی
+        else fill.style.background = '#e53e3e'; // سوور
+    }
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            const swCode = `
+                const CACHE_NAME = 'traffic-halabja-v5';
+                const ASSETS = [
+                    '${window.location.pathname}',
+                    'https://img.icons8.com/fluency/300/traffic-light.png',
+                    'https://cdn.jsdelivr.net/gh/vaak-co/rabar-font@main/dist/font-face.css'
+                ];
+
+                self.addEventListener('install', e => {
+                    e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+                });
+
+                self.addEventListener('activate', e => {
+                    e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => k !== CACHE_NAME && caches.delete(k)))).then(() => self.clients.claim()));
+                });
+
+                self.addEventListener('fetch', e => {
+                    e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
+                });
+            `;
+            
+            const swBlob = new Blob([swCode], {type: 'application/javascript'});
+            const swUrl = URL.createObjectURL(swBlob);
+
+            navigator.serviceWorker.register(swUrl, { scope: './' })
+                .then(reg => console.log('PWA Offline System Activated!'))
+                .catch(err => console.log('PWA Error:', err));
+        });
+    }
+</script>
+
+</body>
+</html>
